@@ -1,0 +1,32 @@
+/* main.css */
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font: 13pt Georgia, "Times New Roman", Times, serif;
+	line-height: 1.3;
+	background: #fff !important;
+	color: #000;
+	margin: 2em;
+	}
+
+ul {
+  columns: 4;
+  -webkit-columns: 4;
+  -moz-columns: 4;
+}
+
+li > p {
+	text-align: justify;
+}
+
+/* override styles when printing */
+@media print {
+  body {
+    margin: 0;
+    color: #000;
+    background-color: #fff;
+  }
+}
