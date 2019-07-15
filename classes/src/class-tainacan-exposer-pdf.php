@@ -30,16 +30,15 @@ add_action('init', function( ) {
 			// 	foreach ($mapper->prefixes as $prefix => $schema) {
 			// 		$this->contexts[$prefix] = $schema;
 			// 	}
-				
-				// foreach ($response->get_data()['items'] as $item) {
-				// 	foreach ($item['metadata'] as $meta_id => $meta_value) {
-				// 		if ( !empty($meta_value['mapping']) ) {
-				// 			foreach($meta_value['mapping'] as $map => $map_value) {
-				// 				$this->contexts[$meta_value['name']] = ["@id" => $map_value]; //pode ter mais de um mapper usar o mapp passado pela URL?
-				// 			}
-				// 		}
-				// 	}
-				// }
+			// foreach ($response->get_data()['items'] as $item) {
+			// 	foreach ($item['metadata'] as $meta_id => $meta_value) {
+			// 		if ( !empty($meta_value['mapping']) ) {
+			// 			foreach($meta_value['mapping'] as $map => $map_value) {
+			// 				$this->contexts[$meta_value['name']] = ["@id" => $map_value]; //pode ter mais de um mapper usar o mapp passado pela URL?
+			// 			}
+			// 		}
+			// 	}
+			// }
 			// } else {
 			// 	foreach ($response->get_data()['items'] as $item) {
 			// 		foreach ($item['metadata'] as $meta_id => $meta_value) {
@@ -66,7 +65,24 @@ add_action('init', function( ) {
 				foreach ($item['metadata'] as $metadata) {
 					$li .= sprintf($pattern_li, $metadata["name"], $metadata["value"]);
 				}
-				$items_ul[] = "<ul>$li</ul>";
+				$attachment = array_values(
+					get_children(
+						array(
+							'post_parent' => $item['id'],
+							'post_type' => 'attachment',
+							'post_mime_type' => 'image',
+							'order' => 'ASC',
+							'numberposts'  => -1,
+						)
+					)
+				);
+				$attachements = "";
+				if ( ! empty( $attachment ) ) {
+					foreach ( $attachment as $attachment ) {
+						$attachements .= wp_get_attachment_image( $attachment->ID, 'tainacan-interface-item-attachments' );
+					}
+				}
+				$items_ul[] = "<ul>$li</ul> <div> <h2>anexos</h2> $attachements </div>";
 			}
 			return \implode(" ", $items_ul);
 		}

@@ -10,12 +10,12 @@ body {
 	background: #fff !important;
 	color: #000;
 	margin: 2em;
-	}
+}
 
 ul {
-  columns: 4;
-  -webkit-columns: 4;
-  -moz-columns: 4;
+	columns: 4;
+	-webkit-columns: 4;
+	-moz-columns: 4;
 }
 
 li > p {
@@ -24,9 +24,9 @@ li > p {
 
 /* override styles when printing */
 @media print {
-  body {
-    margin: 0;
-    color: #000;
-    background-color: #fff;
-  }
+	body {
+		margin: 0;
+		color: #000;
+		background-color: #fff;
+	}
 }
