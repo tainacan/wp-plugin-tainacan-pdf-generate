@@ -91,7 +91,7 @@ add_action('init', function( ) {
 				$items_ul[] = "
 					<div class='lista-galeria'>
 						<h3>$item_title</h3>
-						$item_thumbnail
+						<div class='lista-galeria__image'>$item_thumbnail</div>
 						<ul class='lista-colecao'>
 							$li
 						</ul>
