@@ -31,19 +31,14 @@ body {
 
 .lista-colecao {
 	margin: 0;
-	padding: 20px 0;
-	list-style-type: none;
-	-moz-column-count: 2;
-	-webkit-column-count: 2;
-	column-count: 2;
-	-moz-column-rule: none;
-	-webkit-column-rule: none;
-	column-rule: none;
+	padding: 0;
 }
-.lista-colecao li { padding: 0; }
-.lista-colecao li + li { margin-top: 10px; }
-.lista-colecao p { text-align: justify; }
+.lista-colecao td {
+	margin: 0;
+	padding: 10px 10px 10px 0;
+}
 .lista-colecao strong { font-size: 14px; }
+.lista-colecao p { font-size: 12px; }
 
 /*
 - LISTA DE IMAGENS
@@ -59,10 +54,7 @@ body {
 	padding: 30px 0 0;
 	border-top: 2px solid #999;
 }
-.lista-galeria__image img {
-	margin: 0 auto;
-	display: block;
-}
+.lista-galeria__image { text-align: center; }
 .lista-galeria__images {
 	width: 100%;
 	margin: 0;
