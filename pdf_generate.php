@@ -10,7 +10,7 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
 
-//require_once plugin_dir_path(__FILE__) . 'classes/custom-form-rdf.php';
+require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 require_once plugin_dir_path(__FILE__) . 'classes/src/class-tainacan-exposer-pdf.php';
 
 add_action('wp_enqueue_scripts', 'get_static_files');

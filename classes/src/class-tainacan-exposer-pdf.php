@@ -3,6 +3,9 @@ namespace Tainacan\PDF;
 
 add_action('init', function( ) {
 
+	if ( ! defined ( 'TAINACAN_PDF_HTML' ) ) {
+		define ( 'TAINACAN_PDF_HTML', false );
+	}
 	class ExposerPDF extends \Tainacan\Exposers\Exposer {
 		public $slug = 'exposer-pdf';
 		public $mappers = false;
@@ -25,35 +28,18 @@ add_action('init', function( ) {
 				'Content-Type: text/html; charset=' . get_option( 'blog_charset' )
 			]);
 			
-			// $mapper = \Tainacan\Mappers_Handler::get_instance()->get_mapper_from_request($request);
-			// if($mapper && property_exists($mapper, 'XML_namespace') && !empty($mapper->XML_namespace)) {
-			// 	foreach ($mapper->prefixes as $prefix => $schema) {
-			// 		$this->contexts[$prefix] = $schema;
-			// 	}
-			// foreach ($response->get_data()['items'] as $item) {
-			// 	foreach ($item['metadata'] as $meta_id => $meta_value) {
-			// 		if ( !empty($meta_value['mapping']) ) {
-			// 			foreach($meta_value['mapping'] as $map => $map_value) {
-			// 				$this->contexts[$meta_value['name']] = ["@id" => $map_value]; //pode ter mais de um mapper usar o mapp passado pela URL?
-			// 			}
-			// 		}
-			// 	}
-			// }
-			// } else {
-			// 	foreach ($response->get_data()['items'] as $item) {
-			// 		foreach ($item['metadata'] as $meta_id => $meta_value) {
-			// 			$this->contexts[$meta_value['name']] = $meta_value['semantic_uri'];
-			// 		}
-			// 	}
-			// }
-			// $this->contexts['@language'] = $this->get_locale($response->get_data()['items']);
-
-			// $contexts =  '"@context":' . \json_encode($this->contexts);
 			$body = $this->array_to_html($response->get_data()['items']);
 			$head = $this->get_head();
 			$html = $this->get_html($head, $body);
-			$response->set_data($html);
-			return $response;
+			
+			if (TAINACAN_PDF_HTML) {
+				$response->set_data($html);
+				return $response;
+			} else  {
+				$mpdf = new \Mpdf\Mpdf(['tempDir' => wp_upload_dir()['basedir']]);
+				$mpdf->WriteHTML($html);
+				$mpdf->Output();
+			}
 		}
 
 		protected function array_to_html( $data) {
