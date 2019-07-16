@@ -64,7 +64,9 @@ add_action('init', function( ) {
 				$pattern_li = "<li><p><strong> %s :</strong> %s </p> </li>";
 				foreach ($item['metadata'] as $metadata) {
 					if( !is_array($metadata["value"]) )
-					$li .= sprintf($pattern_li, $metadata["name"], $metadata["value"]);
+						$li .= sprintf($pattern_li, $metadata["name"], $metadata["value"]);
+					else 
+						$li .= sprintf($pattern_li, $metadata["name"], \implode(" - ", $metadata["value"]) );
 				}
 				$attachment = array_values(
 					get_children(
