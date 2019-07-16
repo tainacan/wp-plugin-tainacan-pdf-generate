@@ -5,7 +5,7 @@ add_action('init', function( ) {
 
 	class ExposerPDF extends \Tainacan\Exposers\Exposer {
 		public $slug = 'exposer-pdf';
-		public $mappers = true;
+		public $mappers = false;
 		public $accept_no_mapper = true;
 
 		function __construct() {
