@@ -66,7 +66,7 @@ add_action('init', function( ) {
 					if( !is_array($metadata["value"]) )
 						$li .= sprintf($pattern_li, $metadata["name"], $metadata["value"]);
 					else 
-						$li .= sprintf($pattern_li, $metadata["name"], \implode(" - ", $metadata["value"]) );
+						$li .= sprintf($pattern_li, $metadata["name"], \implode(" | ", $metadata["value"]) );
 				}
 				$attachment = array_values(
 					get_children(
@@ -85,7 +85,22 @@ add_action('init', function( ) {
 						$attachements .= wp_get_attachment_image( $attachment->ID, 'tainacan-interface-item-attachments' );
 					}
 				}
-				$items_ul[] = "<div class='lista-galeria'><ul class='lista-colecao'>$li</ul><div class='lista-galeria__images'><div class='wrapper-images'>$attachements</div></div></div>";
+				$item_title = $item['title'];
+				//$item_description =  empty($item['description']) ? "" : "<span>" . $item['description'] . "</span>";
+				$item_thumbnail = get_the_post_thumbnail($item['id'], 'tainacan-medium-full');
+				$items_ul[] = "
+					<div class='lista-galeria'>
+						<h3>$item_title</h3>
+						$item_thumbnail
+						<ul class='lista-colecao'>
+							$li
+						</ul>
+						<div class='lista-galeria__images'>
+							<div class='wrapper-images'>
+								$attachements
+							</div>
+						</div>
+					</div>";
 			}
 			return \implode(" ", $items_ul);
 		}
