@@ -44,15 +44,16 @@ add_action('init', function( ) {
 
 		protected function array_to_html( $data) {
 			$jsonld = '';
-			$items_table = [];
+			$items_list = [];
+			$contador = 0;
 			foreach ($data as $item) {
-				$tr = "";
-				$pattern_tr = "<tr><td valign='top'><strong> %s:</strong></td> <td valign='top'><p> %s </p></td> </tr>";
+				$li = "";
+				$pattern_li = "<li><strong> %s:</strong><p> %s </p></li>";
 				foreach ($item['metadata'] as $metadata) {
 					if( !is_array($metadata["value"]) )
-						$tr .= sprintf($pattern_tr, $metadata["name"], $metadata["value"]);
+						$li .= sprintf($pattern_li, $metadata["name"], $metadata["value"]);
 					else 
-						$tr .= sprintf($pattern_tr, $metadata["name"], \implode(" | ", $metadata["value"]) );
+						$li .= sprintf($pattern_li, $metadata["name"], \implode(" | ", $metadata["value"]) );
 				}
 				$attachment = array_values(
 					get_children(
@@ -72,23 +73,29 @@ add_action('init', function( ) {
 					}
 				}
 				$item_title = $item['title'];
-				//$item_description =  empty($item['description']) ? "" : "<span>" . $item['description'] . "</span>";
 				$item_thumbnail = get_the_post_thumbnail($item['id'], 'tainacan-medium-full');
-				$items_table[] = "
+				if ($contador != 0) {
+					$quebra = "<div class='box-quebra'></div>";
+				} else {
+					$quebra = "";
+				}
+				$items_list[] = "
+					$quebra
 					<div class='lista-galeria'>
 						<h3>$item_title</h3>
 						<div class='lista-galeria__image'>$item_thumbnail</div>
-						<table class='lista-colecao'>
-							$tr
-						</table>
+						<ul class='lista-colecao'>
+							$li
+						</ul>
 						<div class='lista-galeria__images'>
 							<div class='wrapper-images'>
 								$attachements
 							</div>
 						</div>
 					</div>";
+				$contador++;
 			}
-			return \implode(" ", $items_table);
+			return \implode(" ", $items_list);
 		}
 	
 		public function get_locale($obj) {

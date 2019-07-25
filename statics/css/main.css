@@ -32,11 +32,9 @@ body {
 .lista-colecao {
 	margin: 0;
 	padding: 0;
+	list-style-type: none;
 }
-.lista-colecao td {
-	margin: 0;
-	padding: 10px 10px 10px 0;
-}
+.lista-colecao li + li { margin-top: 20px; }
 .lista-colecao strong { font-size: 14px; }
 .lista-colecao p { font-size: 12px; }
 
@@ -44,15 +42,11 @@ body {
 - LISTA DE IMAGENS
 */
 
+.box-quebra { page-break-before: always; }
 .lista-galeria {
 	margin: 0 30px 30px;
-	padding: 0;
-	page-break-inside: avoid;
-}
-.lista-galeria + .lista-galeria {
-	margin: 30px 30px 30px;
-	padding: 30px 0 0;
-	border-top: 2px solid #999;
+	padding: 30px;
+	background-color: #eee;
 }
 .lista-galeria__image { text-align: center; }
 .lista-galeria__images {
