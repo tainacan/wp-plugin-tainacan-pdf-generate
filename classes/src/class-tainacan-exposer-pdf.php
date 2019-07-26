@@ -109,7 +109,8 @@ add_action('init', function( ) {
 								$attachements
 							</table>
 						</div>
-					</div>";
+					</div>
+					<div class='borda'></div>";
 				$contador++;
 			}
 			return \implode(" ", $items_list);
@@ -133,6 +134,7 @@ add_action('init', function( ) {
 					</head>
 					
 					<body>
+						<div class='borda'></div>
 						%s
 						<div class='borda'></div>
 					</body>
