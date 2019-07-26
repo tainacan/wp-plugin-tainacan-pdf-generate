@@ -29,11 +29,8 @@ body {
 
 .lista-galeria {
 	width: 100%;
-	height: 100%;
-	min-height: 100%;
 	margin: 0 0 30px;
 	padding: 30px;
-	border: 1px solid #999;
 }
 .lista-galeria__title { font-size: 14px; }
 .lista-galeria__thumb { text-align: center; }
@@ -61,8 +58,19 @@ body {
 }
 .lista-galeria__table { width: 100%; }
 .lista-galeria__row { width: 100%; }
-.lista-galeria__row td { padding-bottom: 30px; }
-.lista-galeria__image { width: 50%; }
+.lista-galeria__row td {
+	padding-bottom: 30px;
+	text-align: center;
+}
+
+.borda {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	border: 2px solid #999;
+}
 
 /* override styles when printing */
 @media print {

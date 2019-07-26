@@ -71,9 +71,9 @@ add_action('init', function( ) {
 				if ( ! empty( $attachment_list ) ) {
 					$count = 1;
 					foreach ( $attachment_list as $attachment ) {
-						$temp .= '<td><div class="lista-galeria__image"><span>Anexo ' . $count .  '</span><br>' . wp_get_attachment_image( $attachment->ID, 'tainacan-interface-item-attachments' ) . '</div></td>';
+						$temp .= '<td><span class="lista-galeria__image"><span>Anexo ' . $count .  '</span><br>' . wp_get_attachment_image( $attachment->ID, 'tainacan-interface-item-attachments' ) . '</span></td>';
 
-						if( $count % 2 == 0)  {
+						if( $count % 3 == 0)  {
 							$attachements .= "<tr class='lista-galeria__row'>$temp</tr>";
 							$temp = "";
 						} elseif ( count($attachment_list) == $count ) {
@@ -91,6 +91,7 @@ add_action('init', function( ) {
 					$quebra = "";
 				}
 				$items_list[] = "
+					<div class='borda'></div>
 					$quebra
 					<div class='lista-galeria'>
 						<h2 class='lista-galeria__title'>$item_title</h2>
@@ -132,8 +133,8 @@ add_action('init', function( ) {
 					</head>
 					
 					<body>
-						<h1 class='titulo-principal'>PDF Tainacan</h1>
 						%s
+						<div class='borda'></div>
 					</body>
 				</html>
 			", $head, $body);
