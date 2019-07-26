@@ -19,49 +19,50 @@ body {
 - TÍTULO
 */
 
-.lista-titulo {
-	margin: 30px;
+.titulo-principal {
+	margin: 30px 0;
 	padding: 0;
 	text-align: center;
 }
 
-/*
-- COLEÇÃO DE ITENS
-*/
+.box-quebra { page-break-before: always; }
 
-.lista-colecao {
+.lista-galeria {
+	width: 100%;
+	height: 100%;
+	min-height: 100%;
+	margin: 0 0 30px;
+	padding: 30px;
+	border: 1px solid #999;
+}
+.lista-galeria__title { font-size: 14px; }
+.lista-galeria__thumb { text-align: center; }
+
+.lista-galeria__dados {
 	margin: 0;
 	padding: 0;
 	list-style-type: none;
 }
-.lista-colecao li + li { margin-top: 20px; }
-.lista-colecao strong { font-size: 14px; }
-.lista-colecao p { font-size: 12px; }
-
-/*
-- LISTA DE IMAGENS
-*/
-
-.box-quebra { page-break-before: always; }
-.lista-galeria {
-	margin: 0 30px 30px;
-	padding: 30px;
-	background-color: #eee;
+.lista-galeria__dados li { margin-bottom: 20px; }
+.lista-galeria__dados strong {
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
 }
-.lista-galeria__image { text-align: center; }
+.lista-galeria__dados p {
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+}
+
 .lista-galeria__images {
 	width: 100%;
 	margin: 0;
 }
-.lista-galeria__images img {
-	margin: 0;
-	display: block;
-}
-.wrapper-images {
-	width: 100%;
-	display: flex;
-	flex-wrap: wrap;
-}
+.lista-galeria__table { width: 100%; }
+.lista-galeria__row { width: 100%; }
+.lista-galeria__row td { padding-bottom: 30px; }
+.lista-galeria__image { width: 50%; }
 
 /* override styles when printing */
 @media print {

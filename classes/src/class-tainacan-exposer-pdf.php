@@ -55,7 +55,7 @@ add_action('init', function( ) {
 					else 
 						$li .= sprintf($pattern_li, $metadata["name"], \implode(" | ", $metadata["value"]) );
 				}
-				$attachment = array_values(
+				$attachment_list = array_values(
 					get_children(
 						array(
 							'post_parent' => $item['id'],
@@ -67,9 +67,20 @@ add_action('init', function( ) {
 					)
 				);
 				$attachements = "";
-				if ( ! empty( $attachment ) ) {
-					foreach ( $attachment as $attachment ) {
-						$attachements .= wp_get_attachment_image( $attachment->ID, 'tainacan-interface-item-attachments' );
+				$temp = "";
+				if ( ! empty( $attachment_list ) ) {
+					$count = 1;
+					foreach ( $attachment_list as $attachment ) {
+						$temp .= '<td><div class="lista-galeria__image"><span>Anexo ' . $count .  '</span><br>' . wp_get_attachment_image( $attachment->ID, 'tainacan-interface-item-attachments' ) . '</div></td>';
+
+						if( $count % 2 == 0)  {
+							$attachements .= "<tr class='lista-galeria__row'>$temp</tr>";
+							$temp = "";
+						} elseif ( count($attachment_list) == $count ) {
+							$attachements .= "<tr class='lista-galeria__row'>$temp</tr>";
+							$temp = "";
+						}
+						$count++;
 					}
 				}
 				$item_title = $item['title'];
@@ -82,15 +93,20 @@ add_action('init', function( ) {
 				$items_list[] = "
 					$quebra
 					<div class='lista-galeria'>
-						<h3>$item_title</h3>
-						<div class='lista-galeria__image'>$item_thumbnail</div>
-						<ul class='lista-colecao'>
+						<h2 class='lista-galeria__title'>$item_title</h2>
+
+						<div class='lista-galeria__thumb'>
+							$item_thumbnail
+						</div>
+
+						<ul class='lista-galeria__dados'>
 							$li
 						</ul>
+
 						<div class='lista-galeria__images'>
-							<div class='wrapper-images'>
+							<table class='lista-galeria__table'>
 								$attachements
-							</div>
+							</table>
 						</div>
 					</div>";
 				$contador++;
@@ -116,7 +132,7 @@ add_action('init', function( ) {
 					</head>
 					
 					<body>
-						<h1 class='lista-titulo'>PDF Tainacan</h1>
+						<h1 class='titulo-principal'>PDF Tainacan</h1>
 						%s
 					</body>
 				</html>
