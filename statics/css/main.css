@@ -42,7 +42,7 @@ body {
 	padding: 0;
 	list-style-type: none;
 }
-.lista-galeria__dados li { margin-bottom: 20px; }
+.lista-galeria__dados li { margin-bottom: 10px; }
 .lista-galeria__dados strong {
 	margin: 0;
 	padding: 0;
