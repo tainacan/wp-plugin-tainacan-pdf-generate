@@ -52,10 +52,11 @@ add_action('init', function( ) {
 				$li = "";
 				$pattern_li = "<li><strong> %s:</strong><p> %s </p></li>";
 				foreach ($item['metadata'] as $metadata) {
-					if( !is_array($metadata["value"]) )
-						$li .= sprintf($pattern_li, $metadata["name"], $metadata["value"]);
-					else 
-						$li .= sprintf($pattern_li, $metadata["name"], \implode(" | ", $metadata["value"]) );
+					$li .= sprintf($pattern_li, $metadata["name"], $metadata["value_as_string"]);
+					// if( !is_array($metadata["value"]) )
+					// 	$li .= sprintf($pattern_li, $metadata["name"], $metadata["value"]);
+					// else 
+					// 	$li .= sprintf($pattern_li, $metadata["name"], \implode(" | ", $metadata["value"]) ) . " ==> " . \json_encode($metadata);
 				}
 				$attachment_list = array_values(
 					get_children(
