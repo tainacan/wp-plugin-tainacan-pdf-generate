@@ -29,9 +29,10 @@ body {
 
 .lista-galeria {
 	width: 100%;
+	height: 100%;
 	margin: 0 0 30px;
 	padding: 30px;
-	border: 1px solid #999;
+	/*border: 1px solid #999;*/
 }
 .lista-galeria__title { font-size: 14px; }
 .lista-galeria__thumb { text-align: center; }
