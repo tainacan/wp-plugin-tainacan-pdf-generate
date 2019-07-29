@@ -37,6 +37,8 @@ add_action('init', function( ) {
 				return $response;
 			} else  {
 				$mpdf = new \Mpdf\Mpdf(['tempDir' => wp_upload_dir()['basedir']]);
+				// $mpdf->SetHeader(' ');
+				// $mpdf->SetFooter(' ');
 				$mpdf->WriteHTML($html);
 				$mpdf->Output();
 			}
@@ -130,6 +132,7 @@ add_action('init', function( ) {
 					<head>
 						%s
 						<link href='https://fonts.googleapis.com/css?family=Roboto&display=swap' rel='stylesheet'>
+						<style>hr { padding-top: 30px; border-bottom: 5px solid #000; } </style>
 					</head>
 					
 					<body>
