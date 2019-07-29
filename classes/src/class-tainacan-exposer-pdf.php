@@ -37,8 +37,9 @@ add_action('init', function( ) {
 				return $response;
 			} else  {
 				$mpdf = new \Mpdf\Mpdf(['tempDir' => wp_upload_dir()['basedir']]);
-				// $mpdf->SetHeader(' ');
-				// $mpdf->SetFooter(' ');
+				$mpdf->SetHeader("<div class='borda'></div>");
+				//$mpdf->SetFooter($footer);
+				$mpdf->shrink_tables_to_fit = 1;
 				$mpdf->WriteHTML($html);
 				$mpdf->Output();
 			}
@@ -47,7 +48,6 @@ add_action('init', function( ) {
 		protected function array_to_html( $data) {
 			$jsonld = '';
 			$items_list = [];
-			$contador = 0;
 			foreach ($data as $item) {
 				$li = "";
 				$pattern_li = "<li><strong> %s:</strong><p> %s </p></li>";
@@ -87,14 +87,7 @@ add_action('init', function( ) {
 				}
 				$item_title = $item['title'];
 				$item_thumbnail = get_the_post_thumbnail($item['id'], 'tainacan-medium-full');
-				if ($contador != 0) {
-					$quebra = "<div class='box-quebra'></div>";
-				} else {
-					$quebra = "";
-				}
 				$items_list[] = "
-					<div class='borda'></div>
-					$quebra
 					<div class='lista-galeria'>
 						<h2 class='lista-galeria__title'>$item_title</h2>
 
@@ -111,8 +104,9 @@ add_action('init', function( ) {
 								$attachements
 							</table>
 						</div>
-					</div>";
-				$contador++;
+					</div>
+					<tocpagebreak />
+					";
 			}
 			return \implode(" ", $items_list);
 		}
