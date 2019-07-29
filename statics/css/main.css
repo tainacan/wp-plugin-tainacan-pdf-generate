@@ -74,6 +74,11 @@ body {
 	border: 2px solid #999;
 }
 
+@page {
+	/* margin-top: 3cm;
+	margin-bottom: 4cm; */
+}
+
 /* override styles when printing */
 @media print {
 	body {

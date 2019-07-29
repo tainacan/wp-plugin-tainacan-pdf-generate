@@ -37,8 +37,10 @@ add_action('init', function( ) {
 				return $response;
 			} else  {
 				$mpdf = new \Mpdf\Mpdf(['tempDir' => wp_upload_dir()['basedir']]);
+				$mpdf->defaultheaderline = 0;
+				$mpdf->defaultfooterline = 0;
 				$mpdf->SetHeader("<div class='borda'></div>");
-				//$mpdf->SetFooter($footer);
+				$mpdf->SetFooter("<div align='center'>{PAGENO}/{nbpg}</div>");
 				$mpdf->shrink_tables_to_fit = 1;
 				$mpdf->WriteHTML($html);
 				$mpdf->Output();
@@ -88,6 +90,7 @@ add_action('init', function( ) {
 				$item_title = $item['title'];
 				$item_thumbnail = get_the_post_thumbnail($item['id'], 'tainacan-medium-full');
 				$items_list[] = "
+					<tocpagebreak />
 					<div class='lista-galeria'>
 						<h2 class='lista-galeria__title'>$item_title</h2>
 
@@ -105,7 +108,6 @@ add_action('init', function( ) {
 							</table>
 						</div>
 					</div>
-					<tocpagebreak />
 					";
 			}
 			return \implode(" ", $items_list);
@@ -126,12 +128,10 @@ add_action('init', function( ) {
 					<head>
 						%s
 						<link href='https://fonts.googleapis.com/css?family=Roboto&display=swap' rel='stylesheet'>
-						<style>hr { padding-top: 30px; border-bottom: 5px solid #000; } </style>
 					</head>
 					
 					<body>
 						%s
-						<div class='borda'></div>
 					</body>
 				</html>
 			", $head, $body);
