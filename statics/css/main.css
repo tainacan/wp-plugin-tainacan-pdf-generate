@@ -32,7 +32,7 @@ body {
 	width: 100%;
 	height: 100%;
 	margin: 0 0 30px;
-	padding: 30px;  
+	padding: 0 30px 30px;
 }
 .lista-galeria__title { font-size: 14px; }
 .lista-galeria__thumb { text-align: center; }
@@ -42,7 +42,10 @@ body {
 	padding: 0;
 	list-style-type: none;
 }
-.lista-galeria__dados li { margin-bottom: 10px; }
+.lista-galeria__dados li {
+	margin-bottom: 10px;
+	page-break-inside: avoid;
+}
 .lista-galeria__dados strong {
 	margin: 0;
 	padding: 0;
@@ -75,8 +78,7 @@ body {
 }
 
 @page {
-	/* margin-top: 3cm;
-	margin-bottom: 4cm; */
+	
 }
 
 /* override styles when printing */
