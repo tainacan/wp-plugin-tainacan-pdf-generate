@@ -93,8 +93,7 @@ add_action('init', function( ) {
 					$quebra = "";
 				}
 				$items_list[] = "
-					<div class='borda'><div class='borda-interna'></div></div>
-					<hr class='borda-1'>
+					<div class='borda'></div>
 					$quebra
 					<div class='lista-galeria'>
 						<h2 class='lista-galeria__title'>$item_title</h2>
@@ -112,7 +111,7 @@ add_action('init', function( ) {
 								$attachements
 							</table>
 						</div>
-					</div><hr class='borda-2'>";
+					</div>";
 				$contador++;
 			}
 			return \implode(" ", $items_list);
@@ -138,7 +137,7 @@ add_action('init', function( ) {
 					
 					<body>
 						%s
-						<div class='borda'><div class='borda-interna'></div></div>
+						<div class='borda'></div>
 					</body>
 				</html>
 			", $head, $body);
