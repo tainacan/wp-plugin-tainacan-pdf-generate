@@ -98,18 +98,18 @@ add_action('init', function( ) {
 
 						<div class='lista-galeria__thumb'>
 							$item_thumbnail
-						</div>
+						</div><div class='borda'></div>
 
 						<ul class='lista-galeria__dados'>
 							$li
-						</ul>
+						</ul><div class='borda'></div>
 
 						<div class='lista-galeria__images'>
 							<table class='lista-galeria__table'>
 								$attachements
 							</table>
 						</div>
-					</div>";
+					</div><div class='borda'></div>";
 				$contador++;
 			}
 			return \implode(" ", $items_list);
@@ -133,6 +133,7 @@ add_action('init', function( ) {
 					</head>
 					
 					<body>
+						<div class='borda'></div>
 						%s
 						<div class='borda'></div>
 					</body>
