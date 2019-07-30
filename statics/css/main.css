@@ -35,7 +35,10 @@ body {
 	padding: 0 30px 30px;
 }
 .lista-galeria__title { font-size: 14px; }
-.lista-galeria__thumb { text-align: center; }
+.lista-galeria__thumb {
+	margin-bottom: 30px;
+	text-align: center;
+}
 
 .lista-galeria__dados {
 	margin: 0;
@@ -77,9 +80,29 @@ body {
 	border: 2px solid #999;
 }
 
-@page {
-	
+.topo {
+	width: 100%;
+	padding: 0 30px;
+	margin-bottom: 30px;
 }
+.topo td {
+	width: 50%;
+	font-weight: bold;
+}
+.rodape { width: 100%; }
+.rodape td { width: 33%; }
+
+.col-center { text-align: center; }
+.col-right { text-align: right; }
+
+.paginacao {
+	font-weight: 400;
+	font-family: 'Roboto', sans-serif;
+	font-style: normal;
+}
+
+.tainacan-logo { width: 68px; }
+.museu-logo { width: 68px; }
 
 /* override styles when printing */
 @media print {

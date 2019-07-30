@@ -40,7 +40,7 @@ add_action('init', function( ) {
 				$mpdf->defaultheaderline = 0;
 				$mpdf->defaultfooterline = 0;
 				$mpdf->SetHeader("<div class='borda'></div>");
-				$mpdf->SetFooter("<div align='center'>{PAGENO}/{nbpg}</div>");
+				$mpdf->SetFooter("<table class='rodape'><tr><td class='logo'><img class='tainacan-logo' src='http://localhost/projetos/tainacan-wordpress/wp-content/plugins/wp-plugin-tainacan-pdf-generate/statics/img/lgo/tainacan.jpg' alt='Tainacan' /></td><td class='paginacao col-center'>{PAGENO}/{nbpg}</td><td class='data col-right'>04/10/1990</td></tr></table>");
 				$mpdf->shrink_tables_to_fit = 1;
 				$mpdf->WriteHTML($html);
 				$mpdf->Output();
@@ -92,6 +92,17 @@ add_action('init', function( ) {
 				$item_thumbnail = get_the_post_thumbnail($item['id'], 'tainacan-medium-full');
 				$items_list[] = "
 					<tocpagebreak />
+					<table class='topo'>
+						<tr>
+							<td>Instituição</td>
+							<td class='col-right'>
+								<img class='museu-logo' src='http://localhost/projetos/tainacan-wordpress/wp-content/plugins/wp-plugin-tainacan-pdf-generate/statics/img/lgo/museu.jpg' alt='Museu' />
+							</td>
+						</tr>
+						<tr>
+							<td colspan='3'>Coleção Lorem Ipsum</td>
+						</tr>
+					</table>
 					<div class='lista-galeria'>
 						<h2 class='lista-galeria__title'>$item_title</h2>
 
