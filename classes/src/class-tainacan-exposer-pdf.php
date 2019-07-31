@@ -39,8 +39,9 @@ add_action('init', function( ) {
 				$mpdf = new \Mpdf\Mpdf(['tempDir' => wp_upload_dir()['basedir']]);
 				$mpdf->defaultheaderline = 0;
 				$mpdf->defaultfooterline = 0;
+				$logoTainacan = plugins_url('../../statics/img/lgo/tainacan.svg',__FILE__ );
 				$mpdf->SetHeader("<div class='borda'></div>");
-				$mpdf->SetFooter("<table class='rodape'><tr><td class='logo'><img class='tainacan-logo' src='http://localhost/projetos/tainacan-wordpress/wp-content/plugins/wp-plugin-tainacan-pdf-generate/statics/img/lgo/tainacan.jpg' alt='Tainacan' /></td><td class='paginacao col-center'>{PAGENO}/{nbpg}</td><td class='data col-right'>04/10/1990</td></tr></table>");
+				$mpdf->SetFooter("<table class='rodape'><tr><td class='logo'><img class='tainacan-logo' src='$logoTainacan' alt='Tainacan' /></td><td class='paginacao col-center'>{PAGENO}/{nbpg}</td><td class='data col-right'>04/10/1990</td></tr></table>");
 				$mpdf->shrink_tables_to_fit = 1;
 				$mpdf->WriteHTML($html);
 				$mpdf->Output();
@@ -90,13 +91,14 @@ add_action('init', function( ) {
 				}
 				$item_title = $item['title'];
 				$item_thumbnail = get_the_post_thumbnail($item['id'], 'tainacan-medium-full');
+				$logoMuseu = plugins_url('../../statics/img/lgo/museu.jpg',__FILE__ );
 				$items_list[] = "
 					<tocpagebreak />
 					<table class='topo'>
 						<tr>
 							<td>Instituição</td>
-							<td class='col-right'>
-								<img class='museu-logo' src='http://localhost/projetos/tainacan-wordpress/wp-content/plugins/wp-plugin-tainacan-pdf-generate/statics/img/lgo/museu.jpg' alt='Museu' />
+							<td class='logo-instituicao col-right'>
+								<img class='museu-logo' src='$logoMuseu' alt='Museu' />
 							</td>
 						</tr>
 						<tr>
