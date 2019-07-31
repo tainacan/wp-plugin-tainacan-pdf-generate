@@ -17,6 +17,19 @@ body {
 }
 
 /*
+- PRINCIPAL
+*/
+
+.box-principal {
+	padding-top: 200px;
+	text-align: center;
+}
+.box-principal__logo { display: block; }
+.box-principal__instituicao { font-size: 20px; }
+.box-principal strong { font-size: 16px; }
+.box-principal p { font-size: 14px; }
+
+/*
 - TÍTULO
 */
 
@@ -34,7 +47,14 @@ body {
 	margin: 0 0 30px;
 	padding: 0 30px 30px;
 }
-.lista-galeria__title { font-size: 14px; }
+.lista-galeria__instituicao {
+	font-size: 18px;
+	color: #555;
+}
+.lista-galeria__title {
+	font-size: 14px;
+	color: #555;
+}
 .lista-galeria__thumb {
 	margin-bottom: 30px;
 	text-align: center;
@@ -73,7 +93,7 @@ body {
 
 .borda {
 	width: 100%;
-	height: 97%;
+	height: 97.5%;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -83,7 +103,7 @@ body {
 .topo {
 	width: 100%;
 	padding: 0 30px;
-	margin-bottom: 30px;
+	margin-bottom: 10px;
 }
 .topo td {
 	width: 50%;
@@ -91,11 +111,13 @@ body {
 }
 
 .rodape { width: 100%; }
-.rodape td { width: 33%; }
+.rodape td {
+	width: 33%;
+	color: #444;
+}
 
 .col-center { text-align: center; }
 .col-right { text-align: right; }
-
 
 .logo-instituicao { position: relative; }
 .tainacan-logo { width: 70px; }

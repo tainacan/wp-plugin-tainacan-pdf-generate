@@ -96,17 +96,14 @@ add_action('init', function( ) {
 					<tocpagebreak />
 					<table class='topo'>
 						<tr>
-							<td>Instituição</td>
+							<td><h2 class='lista-galeria__instituicao'>Instituição</h2></td>
 							<td class='logo-instituicao col-right'>
 								<img class='museu-logo' src='$logoMuseu' alt='Museu' />
 							</td>
 						</tr>
-						<tr>
-							<td colspan='3'>Coleção Lorem Ipsum</td>
-						</tr>
 					</table>
 					<div class='lista-galeria'>
-						<h2 class='lista-galeria__title'>$item_title</h2>
+						<h3 class='lista-galeria__title'>$item_title - <span>Coleção Lorem Ipsum</span></h3>
 
 						<div class='lista-galeria__thumb'>
 							$item_thumbnail
@@ -136,6 +133,7 @@ add_action('init', function( ) {
 		}
 
 		private function get_html($head, $body) {
+			$logoPrincipal = plugins_url('../../statics/img/lgo/museu.jpg',__FILE__ );
 			return sprintf("
 			<!doctype html>
 				<html>
@@ -145,6 +143,13 @@ add_action('init', function( ) {
 					</head>
 					
 					<body>
+						<div class='box-principal'>
+							<img class='box-principal__logo' src='$logoPrincipal' alt='Museu' />
+							<h1 class='box-principal__instituicao'>Instituição</h1>
+							<strong>Coleção Lorem Ipsum</strong>
+
+							<p>Este é um documento PDF gerado automaticamente.</p>
+						</div>
 						%s
 					</body>
 				</html>
