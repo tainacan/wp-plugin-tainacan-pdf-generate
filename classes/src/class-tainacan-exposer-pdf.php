@@ -4,7 +4,7 @@ namespace Tainacan\PDF;
 add_action('init', function( ) {
 
 	if ( ! defined ( 'TAINACAN_PDF_HTML' ) ) {
-		define ( 'TAINACAN_PDF_HTML', false );
+		define ( 'TAINACAN_PDF_HTML', get_option('tainacan_pdf_use_html') == 'html' );
 	}
 	class ExposerPDF extends \Tainacan\Exposers\Exposer {
 		public $slug = 'exposer-pdf';
@@ -90,19 +90,22 @@ add_action('init', function( ) {
 					}
 				}
 				$item_title = $item['title'];
+				$collection_name = \Tainacan\Repositories\Collections::get_instance()->fetch($item['collection_id'], 'OBJECT')->get_name();
+
 				$item_thumbnail = get_the_post_thumbnail($item['id'], 'tainacan-medium-full');
-				$logoMuseu = plugins_url('../../statics/img/lgo/museu.jpg',__FILE__ );
+				$logo = get_option('tainacan_pdf_logo_url');
+				$name = get_option('tainacan_pdf_nome_instituicao');
 				$items_list[] = "
 					<tocpagebreak />
 					<table class='topo'>
 						<tr>
-							<td>Instituição</td>
+							<td>$name</td>
 							<td class='logo-instituicao col-right'>
-								<img class='museu-logo' src='$logoMuseu' alt='Museu' />
+								<img class='museu-logo' src='$logo' alt='Museu' />
 							</td>
 						</tr>
 						<tr>
-							<td colspan='3'>Coleção Lorem Ipsum</td>
+							<td colspan='3'>Coleção: $collection_name</td>
 						</tr>
 					</table>
 					<div class='lista-galeria'>
