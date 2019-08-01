@@ -100,13 +100,16 @@ add_action('init', function( ) {
 					<table class='topo'>
 						<tr>
 							<td><h2 class='lista-galeria__instituicao'>$name</h2></td>
-							<td class='logo-instituicao col-right'>
+							<td rowspan='2' class='logo-instituicao col-right'>
 								<img class='museu-logo' src='$logo' alt='Museu' />
 							</td>
 						</tr>
+						<tr>
+							<td><span class='lista-galeria__colecao'>Coleção: $collection_name</span></td>
+						</tr>
 					</table>
 					<div class='lista-galeria'>
-						<h3 class='lista-galeria__title'>$item_title - <span>Coleção: $collection_name</span></h3>
+						<h3 class='lista-galeria__title'>$item_title</h3>
 
 						<div class='lista-galeria__thumb'>
 							$item_thumbnail
@@ -136,7 +139,8 @@ add_action('init', function( ) {
 		}
 
 		private function get_html($head, $body) {
-			$logoPrincipal = plugins_url('../../statics/img/lgo/museu.jpg',__FILE__ );
+			$logo = get_option('tainacan_pdf_logo_url');
+			$name = get_option('tainacan_pdf_nome_instituicao');
 			return sprintf("
 			<!doctype html>
 				<html>
@@ -147,9 +151,8 @@ add_action('init', function( ) {
 					
 					<body>
 						<div class='box-principal'>
-							<img class='box-principal__logo' src='$logoPrincipal' alt='Museu' />
-							<h1 class='box-principal__instituicao'>Instituição</h1>
-							<strong>Coleção Lorem Ipsum</strong>
+							<img class='box-principal__logo' src='$logo' alt='Museu' />
+							<h1 class='box-principal__instituicao'>$name</h1>
 
 							<p>Este é um documento PDF gerado automaticamente.</p>
 						</div>

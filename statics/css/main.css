@@ -21,7 +21,7 @@ body {
 */
 
 .box-principal {
-	padding-top: 200px;
+	padding-top: 150px;
 	text-align: center;
 }
 .box-principal__logo { display: block; }
@@ -49,6 +49,10 @@ body {
 }
 .lista-galeria__instituicao {
 	font-size: 18px;
+	color: #555;
+}
+.lista-galeria__colecao {
+	font-size: 16px;
 	color: #555;
 }
 .lista-galeria__title {
@@ -97,6 +101,7 @@ body {
 	position: fixed;
 	top: 0;
 	left: 0;
+	z-index: 99999;
 	border: 2px solid #999;
 }
 
