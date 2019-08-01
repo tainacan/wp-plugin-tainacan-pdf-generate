@@ -24,7 +24,11 @@ body {
 	padding-top: 150px;
 	text-align: center;
 }
-.box-principal__logo { display: block; }
+.box-principal__logo {
+	max-width: 400px;
+	max-height: 400px;
+	display: block;
+}
 .box-principal__instituicao { font-size: 20px; }
 .box-principal strong { font-size: 16px; }
 .box-principal p { font-size: 14px; }
