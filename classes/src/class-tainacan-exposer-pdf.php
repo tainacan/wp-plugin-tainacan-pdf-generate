@@ -53,20 +53,10 @@ add_action('init', function( ) {
 			$items_list = [];
 			foreach ($data as $item) {
 				$temp = "";
-				$pattern_li = "<td><strong> %s:</strong><p> %s </p></td>";
-				$count=1;
-				$trs = "";
+				$pattern_li = "<li><strong> %s:</strong><p> %s </p></li>";
+				$lis = "";
 				foreach ($item['metadata'] as $metadata) {
-					$temp .= sprintf($pattern_li, $metadata["name"], empty($metadata["value_as_string"]) ? '<span>Valor não informado</span>' : $metadata["value_as_string"]);
-					
-					if( $count % 2 == 0)  {
-						$trs .= "<tr class='lista-galeria__row'>$temp</tr>";
-						$temp = "";
-					} elseif ( count($item['metadata']) == $count ) {
-						$trs .= "<tr class='lista-galeria__row'>$temp</tr>";
-						$temp = "";
-					}
-					$count++;
+					$lis .= sprintf($pattern_li, $metadata["name"], empty($metadata["value_as_string"]) ? '<span>Valor não informado</span>' : $metadata["value_as_string"]);
 				}
 				$attachment_list = array_values(
 					get_children(
@@ -106,35 +96,36 @@ add_action('init', function( ) {
 				}
 				$name = get_option('tainacan_pdf_nome_instituicao');
 				$items_list[] = "
-					<tocpagebreak />
-					<table class='topo'>
-						<tr>
-							<td><h2 class='lista-galeria__instituicao'>$name</h2></td>
-							<td rowspan='2' class='logo-instituicao col-right'>
-								<img class='museu-logo' src='$logo' alt='Museu' />
-							</td>
-						</tr>
-						<tr>
-							<td><span class='lista-galeria__colecao'>Coleção: $collection_name</span></td>
-						</tr>
-					</table>
-					<div class='lista-galeria'>
-						<h3 class='lista-galeria__title'>$item_title</h3>
-
-						<div class='lista-galeria__thumb'>
-							$item_thumbnail
-						</div>
-
-						<table class='lista-galeria__dados'>
-							$trs
+					<tocpagebreak>
+						<table class='topo'>
+							<tr>
+								<td><h2 class='lista-galeria__instituicao'>$name</h2></td>
+								<td rowspan='2' class='logo-instituicao col-right'>
+									<img class='museu-logo' src='$logo' alt='Museu' />
+								</td>
+							</tr>
+							<tr>
+								<td><span class='lista-galeria__colecao'>Coleção: $collection_name</span></td>
+							</tr>
 						</table>
+						<div class='lista-galeria'>
+							<h3 class='lista-galeria__title'>$item_title</h3>
 
-						<div class='lista-galeria__images'>
-							<table class='lista-galeria__table'>
-								$attachements
-							</table>
+							<div class='lista-galeria__thumb'>
+								$item_thumbnail
+							</div>
+
+							<ul class='lista-galeria__dados'>
+								$lis
+							</ul>
+
+							<div class='lista-galeria__images'>
+								<table class='lista-galeria__table'>
+									$attachements
+								</table>
+							</div>
 						</div>
-					</div>
+					</tocpagebreak>
 					";
 			}
 			return \implode(" ", $items_list);
