@@ -52,14 +52,21 @@ add_action('init', function( ) {
 			$jsonld = '';
 			$items_list = [];
 			foreach ($data as $item) {
-				$li = "";
-				$pattern_li = "<li><strong> %s:</strong><p> %s </p></li>";
+				$temp = "";
+				$pattern_li = "<td><strong> %s:</strong><p> %s </p></td>";
+				$count=1;
+				$trs = "";
 				foreach ($item['metadata'] as $metadata) {
-					$li .= sprintf($pattern_li, $metadata["name"], $metadata["value_as_string"]);
-					// if( !is_array($metadata["value"]) )
-					// 	$li .= sprintf($pattern_li, $metadata["name"], $metadata["value"]);
-					// else 
-					// 	$li .= sprintf($pattern_li, $metadata["name"], \implode(" | ", $metadata["value"]) ) . " ==> " . \json_encode($metadata);
+					$temp .= sprintf($pattern_li, $metadata["name"], empty($metadata["value_as_string"]) ? '<span>Valor não informado</span>' : $metadata["value_as_string"]);
+					
+					if( $count % 2 == 0)  {
+						$trs .= "<tr class='lista-galeria__row'>$temp</tr>";
+						$temp = "";
+					} elseif ( count($item['metadata']) == $count ) {
+						$trs .= "<tr class='lista-galeria__row'>$temp</tr>";
+						$temp = "";
+					}
+					$count++;
 				}
 				$attachment_list = array_values(
 					get_children(
@@ -94,6 +101,9 @@ add_action('init', function( ) {
 
 				$item_thumbnail = get_the_post_thumbnail($item['id'], 'tainacan-medium-full');
 				$logo = get_option('tainacan_pdf_logo_url');
+				if (empty($logo)) {
+					$logo = plugins_url('../../statics/img/lgo/thumbnail_placeholder.jpg',__FILE__ );
+				}
 				$name = get_option('tainacan_pdf_nome_instituicao');
 				$items_list[] = "
 					<tocpagebreak />
@@ -115,9 +125,9 @@ add_action('init', function( ) {
 							$item_thumbnail
 						</div>
 
-						<ul class='lista-galeria__dados'>
-							$li
-						</ul>
+						<table class='lista-galeria__dados'>
+							$trs
+						</table>
 
 						<div class='lista-galeria__images'>
 							<table class='lista-galeria__table'>
@@ -140,6 +150,9 @@ add_action('init', function( ) {
 
 		private function get_html($head, $body) {
 			$logo = get_option('tainacan_pdf_logo_url');
+			if (empty($logo)) {
+				$logo = plugins_url('../../statics/img/lgo/thumbnail_placeholder.jpg',__FILE__ );
+			}
 			$name = get_option('tainacan_pdf_nome_instituicao');
 			return sprintf("
 			<!doctype html>
