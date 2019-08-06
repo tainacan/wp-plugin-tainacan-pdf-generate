@@ -45,16 +45,23 @@ function tainacan_pdf_generate_settings_page() {
 function display_theme_panel_fields() {
 	add_settings_section("section", "Cabeçalho do PDF", null, "tainacan-pdf-generate-options");
 	
-	add_settings_field("tainacan_pdf_nome_instituicao", "Nome Instituição", "display_pdf_instituicao", "tainacan-pdf-generate-options", "section");
+	add_settings_field("tainacan_pdf_nome_instituicao", "Nome Instituição", "display_pdf_institution", "tainacan-pdf-generate-options", "section");
+	add_settings_field("tainacan_one_item_per_page", "Um item por página", "display_one_item_per_page", "tainacan-pdf-generate-options", "section");
+	add_settings_field("tainacan_pdf_show_attachements", "Mostrar anexos", "display_show_attachements", "tainacan-pdf-generate-options", "section");
+	add_settings_field("tainacan_pdf_cover_page", "Gerar página de capa", "display_cover_page", "tainacan-pdf-generate-options", "section");
 	add_settings_field("tainacan_pdf_logo_url", "URL imagem logo", "display_pdf_logo_url", "tainacan-pdf-generate-options", "section");
-	add_settings_field("tainacan_pdf_use_html", "gerar em", "display_gerar_html", "tainacan-pdf-generate-options", "section");
-
+	add_settings_field("tainacan_pdf_use_html", "Gerar em", "display_generate_html", "tainacan-pdf-generate-options", "section");
+	
+	register_setting("section", "tainacan_pdf_show_attachements");
 	register_setting("section", "tainacan_pdf_nome_instituicao");
+	register_setting("section", "tainacan_one_item_per_page");
+	register_setting("section", "tainacan_pdf_cover_page");
 	register_setting("section", "tainacan_pdf_logo_url");
 	register_setting("section", "tainacan_pdf_use_html");
+	
 }
 
-function display_pdf_instituicao() {
+function display_pdf_institution() {
 	?> <input type="text" name="tainacan_pdf_nome_instituicao" id="tainacan_pdf_nome_instituicao" value="<?php echo get_option('tainacan_pdf_nome_instituicao'); ?>" /> <?php
 }
 
@@ -62,7 +69,7 @@ function display_pdf_logo_url() {
 	?> <input type="text" name="tainacan_pdf_logo_url" id="tainacan_pdf_logo_url" value="<?php echo get_option('tainacan_pdf_logo_url'); ?>" /> <?php
 }
 
-function display_gerar_html() {
+function display_generate_html() {
 	?>
 		<label for="_html">HTML</label>
 		<input type="radio" name="tainacan_pdf_use_html" id="_html" value="html" <?php  echo get_option('tainacan_pdf_use_html') == 'html' ? 'checked' : '' ?> > <br>
@@ -71,4 +78,24 @@ function display_gerar_html() {
 	<?php
 }
 
+function display_cover_page() {
+	?><select name="tainacan_pdf_cover_page">
+		<option value="sim" <?php  echo get_option('tainacan_pdf_cover_page') == 'sim' ? 'selected' : '' ?>>Sim</option>
+		<option value="nao" <?php  echo get_option('tainacan_pdf_cover_page') == 'nao' ? 'selected' : '' ?>>Não</option>
+	</select><?php
+}
+
+function display_one_item_per_page() {
+	?><select name="tainacan_one_item_per_page">
+		<option value="sim" <?php  echo get_option('tainacan_one_item_per_page') == 'sim' ? 'selected' : '' ?>>Sim</option>
+		<option value="nao" <?php  echo get_option('tainacan_one_item_per_page') == 'nao' ? 'selected' : '' ?>>Não</option>
+	</select><?php
+}
+
+function display_show_attachements() {
+	?><select name="tainacan_pdf_show_attachements">
+		<option value="sim" <?php  echo get_option('tainacan_pdf_show_attachements') == 'sim' ? 'selected' : '' ?>>Sim</option>
+		<option value="nao" <?php  echo get_option('tainacan_pdf_show_attachements') == 'nao' ? 'selected' : '' ?>>Não</option>
+	</select><?php
+}
 
