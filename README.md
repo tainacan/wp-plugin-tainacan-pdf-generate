@@ -10,7 +10,7 @@ O Tainacan é uma ferramenta flexível e poderosa para WordPress que permite a g
 
 ## Sobre o plugin
 
-Esse plugin adiciona um novo expositor no formato PDF ao Tainacan.
+Esse plugin adiciona um novo expositor para o formato PDF ao Tainacan.
 
 ## Configurações
 É necessário configurar o plugin para que o arquivo PDF seja exibido:
