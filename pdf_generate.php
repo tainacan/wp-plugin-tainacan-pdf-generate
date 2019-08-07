@@ -30,7 +30,7 @@ function add_theme_menu_item() {
 function tainacan_pdf_generate_settings_page() {
 	?>
 	<div class="wrap">
-		<h1>Tainacan PDF Configuração</h1>
+		<h1>Tainacan PDF</h1>
 		<form method="post" action="options.php">
 			<?php
 				settings_fields("section");
@@ -43,7 +43,7 @@ function tainacan_pdf_generate_settings_page() {
 }
 
 function display_theme_panel_fields() {
-	add_settings_section("section", "Cabeçalho do PDF", null, "tainacan-pdf-generate-options");
+	add_settings_section("section", "Opções do expositor PDF", null, "tainacan-pdf-generate-options");
 	
 	add_settings_field("tainacan_pdf_nome_instituicao", "Nome Instituição", "display_pdf_institution", "tainacan-pdf-generate-options", "section");
 	add_settings_field("tainacan_one_item_per_page", "Um item por página", "display_one_item_per_page", "tainacan-pdf-generate-options", "section");
