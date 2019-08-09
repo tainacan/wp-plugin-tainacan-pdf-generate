@@ -1,16 +1,15 @@
 # Tainacan - expositor PDF
 
-## Sobre o Tainacan
-O Tainacan é uma ferramenta flexível e poderosa para WordPress que permite a gestão e a publicação de coleções digitais com a mesma facilidade de se publicar posts em blogs, mas mantendo todos os requisitos de uma plataforma profissional para repositórios. 
-
-- Tainacan [plugin](https://wordpress.org/plugins/tainacan/) e [tema](https://wordpress.org/themes/tainacan-interface/) no WordPress.org
-- [website](http://tainacan.org)
-- [leia a documentação oficial](https://wiki.tainacan.org/)
-- [faça para da lista de e-mails](https://lists.riseup.net/www/info/tainacan)
 
 ## Sobre o plugin
 
-Esse plugin adiciona um novo expositor no formato PDF ao Tainacan.
+Esse plugin adiciona um novo expositor para o formato PDF ao Tainacan.
+
+## Instalação
+
+Faça [download](https://github.com/tainacan/wp-plugin-tainacan-pdf-generate/archive/master.zip) do plugin e copie seu conteúdo para a pasta de plugins do WordPress em `wp-content/plugins`.
+
+Você também pode fazer upload do zip diretamente pelo painel de controle do WordPress. Indo em Adicionar Novo plugin e utilizando o recurso "Enviar plugin".
 
 ## Configurações
 É necessário configurar o plugin para que o arquivo PDF seja exibido:
@@ -21,3 +20,11 @@ Esse plugin adiciona um novo expositor no formato PDF ao Tainacan.
 * Gerar página de capa: `se a capa inicial deve ser gerada.`
 * URL imagem logo: `URL da imagem que deve aparece no lado esquerdo do cabeçalho de cada item.`
 * Gerar em: `formato que deve ser gerado HTML ou PDF.`
+
+## Sobre o Tainacan
+O Tainacan é uma ferramenta flexível e poderosa para WordPress que permite a gestão e a publicação de coleções digitais com a mesma facilidade de se publicar posts em blogs, mas mantendo todos os requisitos de uma plataforma profissional para repositórios. 
+
+- Tainacan [plugin](https://wordpress.org/plugins/tainacan/) e [tema](https://wordpress.org/themes/tainacan-interface/) no WordPress.org
+- [website](http://tainacan.org)
+- [leia a documentação oficial](https://wiki.tainacan.org/)
+- [faça para da lista de e-mails](https://lists.riseup.net/www/info/tainacan)
