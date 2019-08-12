@@ -43,7 +43,7 @@ class Plugin {
 	}
 	
 	function add_theme_menu_item() {
-		add_menu_page("PDF Configuração", "PDF Configuração", "manage_options", "tainacan-pdf-generte", "tainacan_pdf_generate_settings_page", null, 99);
+		add_menu_page("PDF Configuração", "PDF Configuração", "manage_options", "tainacan-pdf-generte", [$this, "tainacan_pdf_generate_settings_page"], null, 99);
 	}
 	
 	
@@ -65,12 +65,12 @@ class Plugin {
 	function display_theme_panel_fields() {
 		add_settings_section("section", "Opções do expositor PDF", null, "tainacan-pdf-generate-options");
 		
-		add_settings_field("tainacan_pdf_nome_instituicao", "Nome Instituição", "display_pdf_institution", "tainacan-pdf-generate-options", "section");
-		add_settings_field("tainacan_one_item_per_page", "Um item por página", "display_one_item_per_page", "tainacan-pdf-generate-options", "section");
-		add_settings_field("tainacan_pdf_show_attachements", "Mostrar anexos", "display_show_attachements", "tainacan-pdf-generate-options", "section");
-		add_settings_field("tainacan_pdf_cover_page", "Gerar página de capa", "display_cover_page", "tainacan-pdf-generate-options", "section");
-		add_settings_field("tainacan_pdf_logo_url", "URL imagem logo", "display_pdf_logo_url", "tainacan-pdf-generate-options", "section");
-		add_settings_field("tainacan_pdf_use_html", "Gerar em", "display_generate_html", "tainacan-pdf-generate-options", "section");
+		add_settings_field("tainacan_pdf_nome_instituicao", "Nome Instituição", [$this, "display_pdf_institution"], "tainacan-pdf-generate-options", "section");
+		add_settings_field("tainacan_one_item_per_page", "Um item por página", [$this, "display_one_item_per_page"], "tainacan-pdf-generate-options", "section");
+		add_settings_field("tainacan_pdf_show_attachements", "Mostrar anexos", [$this, "display_show_attachements"], "tainacan-pdf-generate-options", "section");
+		add_settings_field("tainacan_pdf_cover_page", "Gerar página de capa",[$this,  "display_cover_page"], "tainacan-pdf-generate-options", "section");
+		add_settings_field("tainacan_pdf_logo_url", "URL imagem logo", [$this, "display_pdf_logo_url"], "tainacan-pdf-generate-options", "section");
+		add_settings_field("tainacan_pdf_use_html", "Gerar em", [$this, "display_generate_html"], "tainacan-pdf-generate-options", "section");
 		
 		register_setting("section", "tainacan_pdf_show_attachements");
 		register_setting("section", "tainacan_pdf_nome_instituicao");

@@ -46,9 +46,8 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 			$mpdf = new \Mpdf\Mpdf(['tempDir' => wp_upload_dir()['basedir']]);
 			$mpdf->defaultheaderline = 0;
 			$mpdf->defaultfooterline = 0;
-			$logoTainacan = plugins_url('../../statics/img/lgo/tainacan.svg',__FILE__ );
 			if ($this->one_item_per_page) $mpdf->SetHeader("<div class='borda'></div>");
-			$mpdf->SetFooter("<table class='rodape'><tr><td class='logo'><img class='tainacan-logo' src='$logoTainacan' alt='Tainacan' /></td><td class='paginacao col-center'>{PAGENO}/{nbpg}</td><td class='data col-right'>04/10/1990</td></tr></table>");
+			$mpdf->SetFooter($this->create_footer());
 			$mpdf->shrink_tables_to_fit = 1;
 			$mpdf->WriteHTML($html);
 			$mpdf->Output();
@@ -126,7 +125,7 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 
 			$logo = get_option('tainacan_pdf_logo_url');
 			if (empty($logo)) {
-				$logo = plugins_url('../../statics/img/lgo/thumbnail_placeholder.jpg',__FILE__ );
+				$logo = plugins_url('/statics/img/lgo/thumbnail_placeholder.jpg',__FILE__ );
 			}
 			$name = get_option('tainacan_pdf_nome_instituicao');
 			$items_list[] = sprintf($pagebreak, "
@@ -166,7 +165,7 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 		if(get_option('tainacan_pdf_cover_page') == 'sim') {
 			$logo = get_option('tainacan_pdf_logo_url');
 			if (empty($logo)) {
-				$logo = plugins_url('../../statics/img/lgo/thumbnail_placeholder.jpg',__FILE__ );
+				$logo = plugins_url('/statics/img/lgo/thumbnail_placeholder.jpg',__FILE__ );
 			}
 			$name = get_option('tainacan_pdf_nome_instituicao');
 			$cover_page = "
@@ -198,7 +197,7 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 	}
 
 	private function get_head() {
-		$main_css = plugins_url('../../statics/css/main.css',__FILE__ );
+		$main_css = plugins_url('/statics/css/main.css',__FILE__ );
 		return '
 			<title>PDF Tainacan</title>
 			<link rel="stylesheet" type="text/css" href="' . $main_css . '">
@@ -207,5 +206,24 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 
 	private function create_head() {}
 
-	private function create_footer() {}
+	private function create_footer() {
+		$now_date = date('m/d/Y');
+		$logo_tainacan = plugins_url('/statics/img/lgo/tainacan.svg',__FILE__ );
+		return "
+		<table class='rodape'>
+			<tr>
+				<td class='logo'>
+					<img class='tainacan-logo' src='$logo_tainacan' alt='Tainacan' />
+				</td>
+				<td class='paginacao col-center'>
+					{PAGENO}/{nbpg}
+				</td>
+				<td class='data col-right'>
+					$now_date
+				</td>
+			</tr>
+		</table>
+		";
+		
+	}
 }
