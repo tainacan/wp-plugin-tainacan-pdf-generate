@@ -14,7 +14,7 @@ namespace TainacanPDFExposer;
 class Plugin {
 	
 	public function __construct() {
-		add_action("admin_menu", [$this, "add_theme_menu_item"]);
+		add_action("admin_menu", [$this, "add_theme_menu_item"], 20);
 		add_action("admin_init", [$this, "display_theme_panel_fields"]);
 		add_action("init", [$this, "init"]);
 		
@@ -43,11 +43,11 @@ class Plugin {
 	}
 	
 	function add_theme_menu_item() {
-		add_menu_page("PDF Configuração", "PDF Configuração", "manage_options", "tainacan-pdf-generte", [$this, "tainacan_pdf_generate_settings_page"], null, 99);
+		add_submenu_page('tainacan_admin', "Expositor PDF", "Expositor PDF", 'manage_options', 'tainacan-pdf-exposer', [$this, "settings_page"]);
 	}
 	
 	
-	function tainacan_pdf_generate_settings_page() {
+	function settings_page() {
 		?>
 		<div class="wrap">
 			<h1>Tainacan PDF</h1>
