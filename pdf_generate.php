@@ -16,19 +16,11 @@ class Plugin {
 	public function __construct() {
 		add_action("admin_menu", [$this, "add_theme_menu_item"], 20);
 		add_action("admin_init", [$this, "display_theme_panel_fields"]);
-		add_action("init", [$this, "init"]);
 		
 		// TODO: include css only when for the pages where it is used
 		add_action('wp_enqueue_scripts', [$this, 'get_static_files']);
 		
-		// TODO: This should be the right way. Waiting https://github.com/tainacan/tainacan/issues/293
-		//add_action("tainacan-register-exposer", [$this, "register_exposer"]);
-	}
-	
-	function init() {
-		require_once( plugin_dir_path(__FILE__) . 'tainacan-pdf-exposer-class.php' );
-		$exposers = \Tainacan\Exposers_Handler::get_instance();
-		$exposers->register_exposer('TainacanPDFExposer\Exposer');
+		add_action("tainacan-register-exposers", [$this, "register_exposer"]);
 	}
 	
 	function get_static_files() {
