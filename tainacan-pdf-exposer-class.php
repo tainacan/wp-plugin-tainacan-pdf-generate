@@ -75,7 +75,16 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 		if ( ! empty( $attachment_list ) ) {
 			$count = 1;
 			foreach ( $attachment_list as $attachment ) {
-				$temp .= '<td><span class="lista-galeria__image"><span>Anexo ' . $count .  '</span><br>' . wp_get_attachment_image( $attachment->ID, 'tainacan-interface-item-attachments' ) . '</span></td>';
+
+				if ($this->expose_html) {
+					$temp .= '<td><span class="lista-galeria__image"><span>Anexo ' . $count .  '</span><br>' . wp_get_attachment_image( $attachment->ID, 'tainacan-interface-item-attachments' ) . '</span></td>';
+				} else {
+					$file = get_attached_file($attachment->ID, true);
+					$info = image_get_intermediate_size($attachment->ID, 'tainacan-interface-item-attachments');
+					$paths = realpath(str_replace(wp_basename($file), $info['file'], $file));
+					$wp_get_attachment_image = "<img src='$paths' class='attachment-tainacan-interface-item-attachments size-tainacan-interface-item-attachments' alt='' height='125' width='125'>";
+					$temp .= '<td><span class="lista-galeria__image"><span>Anexo ' . $count .  '</span><br>' . $wp_get_attachment_image . '</span></td>';
+				}
 
 				if( $count % 3 == 0)  {
 					$attachements .= "<tr class='lista-galeria__row'>$temp</tr>";
@@ -115,10 +124,18 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 
 			$item_thumbnail = "";
 			if( !empty($item['_thumbnail_id']) || !empty($item['thumbnail']) ) {
-				$item_thumbnail = "
-					<div class='lista-galeria__thumb'>" . 
-						get_the_post_thumbnail($item['id'], 'tainacan-medium-full') . 
-					"</div>";
+
+				if ($this->expose_html) {
+					$img_thumbnail = get_the_post_thumbnail($item['id'], 'tainacan-medium-full');
+				} else {
+					$id_attachment = get_post_thumbnail_id( $post_id );
+					$file = get_attached_file($id_attachment, true);
+					$info = image_get_intermediate_size($id_attachment, 'tainacan-medium-full');
+					$paths = realpath(str_replace(wp_basename($file), $info['file'], $file));
+					$img_thumbnail = "<img src='$paths' class='attachment-tainacan-medium-full size-tainacan-medium-full wp-post-image'>";
+				}
+
+				$item_thumbnail = "<div class='lista-galeria__thumb'> $img_thumbnail </div>";
 			}
 
 			$pagebreak = $this->one_item_per_page ? '<tocpagebreak>%s</tocpagebreak>':'<div class="border-bottom">%s</div>';
