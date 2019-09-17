@@ -9,6 +9,7 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 	public $expose_html = false;
 
 	function __construct() {
+		ini_set("pcre.backtrack_limit", "1000000");
 		$this->set_name( __('PDF') );
 		$this->set_description( __('Exposer items as PDF', 'pdf-exposer') );
 		
@@ -113,6 +114,10 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 	protected function array_to_html( $data) {
 		$jsonld = '';
 		$items_list = [];
+		$count = 1;
+		if(get_option('tainacan_pdf_cover_page') == 'nao') {
+			$count = 0;
+		}
 		foreach ($data as $item) {
 			$temp = "";
 			$pattern_li = "<li><strong> %s:</strong><p> %s </p></li>";
@@ -142,7 +147,7 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 				$item_thumbnail = "<div class='lista-galeria__thumb'> $img_thumbnail </div>";
 			}
 
-			$pagebreak = $this->one_item_per_page ? '<tocpagebreak>%s</tocpagebreak>':'<div class="border-bottom">%s</div>';
+			$pagebreak = $this->one_item_per_page ? ( $count++ == 0 ? '%s' : '<pagebreak type="NEXT-ODD"/> %s'):'<div class="border-bottom">%s</div>';
 
 			$logo = get_option('tainacan_pdf_logo_url');
 			if (empty($logo)) {
@@ -194,8 +199,10 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 					<img class='box-principal__logo' src='$logo' alt='Museu' />
 					<h1 class='box-principal__instituicao'>$name</h1>
 					<p>Este é um documento PDF gerado automaticamente.</p>
-				</div>";
-			return $cover_page;
+				</div>
+				";
+				
+			return $this->one_item_per_page ? $cover_page : $cover_page . '<pagebreak type="NEXT-ODD"/>';
 		}
 		return "";
 	}
