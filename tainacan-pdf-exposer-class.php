@@ -9,6 +9,7 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 	public $expose_html = false;
 
 	function __construct() {
+		wp_enqueue_style( 'tainacan_pdf_main' );
 		ini_set("pcre.backtrack_limit", "1000000");
 		$this->set_name( __('PDF') );
 		$this->set_description( __('Exposer items as PDF', 'pdf-exposer') );
@@ -86,9 +87,11 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 				} else {
 					$file = get_attached_file($attachment->ID, true);
 					$info = image_get_intermediate_size($attachment->ID, 'tainacan-interface-item-attachments');
-					$paths = realpath(str_replace(wp_basename($file), $info['file'], $file));
-					$wp_get_attachment_image = "<img src='$paths' class='attachment-tainacan-interface-item-attachments size-tainacan-interface-item-attachments' alt='' height='125' width='125'>";
-					$temp .= '<td><span class="lista-galeria__image"><span>Anexo ' . $count .  '</span><br>' . $wp_get_attachment_image . '</span></td>';
+					if ($info != false) {
+						$paths = realpath(str_replace(wp_basename($file), $info['file'], $file));
+						$wp_get_attachment_image = "<img src='$paths' class='attachment-tainacan-interface-item-attachments size-tainacan-interface-item-attachments' alt='' height='125' width='125'>";
+						$temp .= '<td><span class="lista-galeria__image"><span>Anexo ' . $count .  '</span><br>' . $wp_get_attachment_image . '</span></td>';
+					}
 				}
 
 				if( $count % 3 == 0)  {
@@ -137,11 +140,13 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 				if ($this->expose_html) {
 					$img_thumbnail = get_the_post_thumbnail($item['id'], 'tainacan-medium-full');
 				} else {
-					$id_attachment = get_post_thumbnail_id( $post_id );
+					$id_attachment = get_post_thumbnail_id( $item['id'] );
 					$file = get_attached_file($id_attachment, true);
 					$info = image_get_intermediate_size($id_attachment, 'tainacan-medium-full');
-					$paths = realpath(str_replace(wp_basename($file), $info['file'], $file));
-					$img_thumbnail = "<img src='$paths' class='attachment-tainacan-medium-full size-tainacan-medium-full wp-post-image'>";
+					if ($info != false) {
+						$paths = realpath(str_replace(wp_basename($file), $info['file'], $file));
+						$img_thumbnail = "<img src='$paths' class='attachment-tainacan-medium-full size-tainacan-medium-full wp-post-image'>";
+					}
 				}
 
 				$item_thumbnail = "<div class='lista-galeria__thumb'> $img_thumbnail </div>";

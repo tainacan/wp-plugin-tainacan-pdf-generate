@@ -17,16 +17,13 @@ class Plugin {
 		add_action("admin_menu", [$this, "add_theme_menu_item"], 20);
 		add_action("admin_init", [$this, "display_theme_panel_fields"]);
 		
-		// TODO: include css only when for the pages where it is used
 		add_action('wp_enqueue_scripts', [$this, 'get_static_files']);
-		
 		add_action("tainacan-register-exposers", [$this, "register_exposer"]);
 	}
 	
 	function get_static_files() {
 		$main_css = plugins_url('statics/css/main.css',__FILE__ );
 		wp_register_style( 'tainacan_pdf_main', $main_css );
-		wp_enqueue_style( 'tainacan_pdf_main' );
 	}
 	
 	function register_exposer($exposers) {
