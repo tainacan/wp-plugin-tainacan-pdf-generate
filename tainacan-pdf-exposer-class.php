@@ -147,6 +147,9 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 					if ($info != false) {
 						$paths = realpath(str_replace(wp_basename($file), $info['file'], $file));
 						$img_thumbnail = "<img src='$paths' class='attachment-tainacan-medium-full size-tainacan-medium-full wp-post-image'>";
+					} else {
+						$paths = plugins_url('/statics/img/placeholder_square.jpg',__FILE__ );
+						$img_thumbnail = "<img src='$paths' class='attachment-tainacan-medium-full size-tainacan-medium-full wp-post-image' width='125' height='125'>";
 					}
 				}
 
