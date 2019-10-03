@@ -137,6 +137,7 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 			$item_thumbnail = "";
 			if( !empty($item['_thumbnail_id']) || !empty($item['thumbnail']) ) {
 
+				$img_thumbnail = "";
 				if ($this->expose_html) {
 					$img_thumbnail = get_the_post_thumbnail($item['id'], 'tainacan-medium-full');
 				} else {
