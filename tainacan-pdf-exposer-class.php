@@ -33,30 +33,39 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 		
 		require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
-		$body = $this->array_to_html($response->get_data()['items']);
-		$head = $this->get_head();
-		$html = $this->get_html($head, $body);
-		
-		if ($this->expose_html) {
+		try {
+			$body = $this->array_to_html($response->get_data()['items']);
+			$head = $this->get_head();
+			$html = $this->get_html($head, $body);
+			
+			if ($this->expose_html) {
+				$response->set_headers([
+					'Content-Type: text/html; charset=' . get_option( 'blog_charset' )
+				]);
+
+				$response->set_data($html);
+				return $response;
+			} else  {
+				$response->set_headers([
+					'Content-Type: application/pdf; charset=' . get_option( 'blog_charset' )
+				]);
+				$mpdf = new \Mpdf\Mpdf(['tempDir' => wp_upload_dir()['basedir'], 'debug' => false]);
+				$mpdf->defaultheaderline = 0;
+				$mpdf->defaultfooterline = 0;
+				if ($this->one_item_per_page) $mpdf->SetHeader("<div class='borda'></div>");
+				$mpdf->SetFooter($this->create_footer());
+				$mpdf->shrink_tables_to_fit = 1;
+				$mpdf->WriteHTML($html);
+				
+				$response->set_data($mpdf->Output());;
+			}
+		} catch (Exception $e) {
 			$response->set_headers([
 				'Content-Type: text/html; charset=' . get_option( 'blog_charset' )
 			]);
 
-			$response->set_data($html);
+			$response->set_data("Falha ao gerar PDF");
 			return $response;
-		} else  {
-			$response->set_headers([
-				'Content-Type: application/pdf; charset=' . get_option( 'blog_charset' )
-			]);
-			$mpdf = new \Mpdf\Mpdf(['tempDir' => wp_upload_dir()['basedir'], 'debug' => true]);
-			$mpdf->defaultheaderline = 0;
-			$mpdf->defaultfooterline = 0;
-			if ($this->one_item_per_page) $mpdf->SetHeader("<div class='borda'></div>");
-			$mpdf->SetFooter($this->create_footer());
-			$mpdf->shrink_tables_to_fit = 1;
-			$mpdf->WriteHTML($html);
-			
-			$response->set_data($mpdf->Output());;
 		}
 	}
 
