@@ -141,7 +141,7 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 
 			$attachements = $this->get_attachment($item);
 
-			$item_title = $item['title'];
+			$item_title = isset($item['title']) ? $item['title'] : '';
 			$collection_name = \Tainacan\Repositories\Collections::get_instance()->fetch($item['collection_id'], 'OBJECT')->get_name();
 
 			$item_thumbnail = "";
