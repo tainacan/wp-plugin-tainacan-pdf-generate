@@ -10,7 +10,8 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 
 	function __construct() {
 		wp_enqueue_style( 'tainacan_pdf_main' );
-		ini_set("pcre.backtrack_limit", "1000000");
+		ini_set('pcre.backtrack_limit', PHP_INT_MAX);
+		//ini_set("pcre.backtrack_limit", "1000000");
 		$this->set_name( __('PDF') );
 		$this->set_description( __('Exposer items as PDF', 'pdf-exposer') );
 		
