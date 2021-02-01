@@ -10,13 +10,11 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 
 	function __construct() {
 		wp_enqueue_style( 'tainacan_pdf_main' );
-		ini_set('pcre.backtrack_limit', PHP_INT_MAX);
-		//ini_set("pcre.backtrack_limit", "1000000");
 		$this->set_name( __('PDF') );
 		$this->set_description( __('Exposer items as PDF', 'pdf-exposer') );
-		
+
 		$this->expose_html = get_option('tainacan_pdf_use_html') == 'html';
-		
+
 		if (get_option('tainacan_one_item_per_page') == 'sim')
 			$this->one_item_per_page = true;
 		else
@@ -32,7 +30,7 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 	 */
 	public function rest_request_after_callbacks( $response, $handler, $request ) {
 		
-		require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
+		//require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
 		try {
 			$body = $this->array_to_html($response->get_data()['items']);
@@ -46,21 +44,16 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 
 				$response->set_data($html);
 				return $response;
-			} else  {
+			} else {
 				$response->set_headers([
-					'Content-Type: application/pdf; charset=' . get_option( 'blog_charset' )
+					'Content-Type: text/html; charset=' . get_option( 'blog_charset' )
 				]);
-				$mpdf = new \Mpdf\Mpdf(['tempDir' => wp_upload_dir()['basedir'], 'debug' => false]);
-				$mpdf->defaultheaderline = 0;
-				$mpdf->defaultfooterline = 0;
-				if ($this->one_item_per_page) $mpdf->SetHeader("<div class='borda'></div>");
-				$mpdf->SetFooter($this->create_footer());
-				$mpdf->shrink_tables_to_fit = 1;
-				$mpdf->WriteHTML($html);
-				
-				$response->set_data($mpdf->Output());;
+
+				$response->set_data($html);
+				return $response;
 			}
-		} catch (Exception $e) {
+			
+		} catch (\Exception $e) {
 			$response->set_headers([
 				'Content-Type: text/html; charset=' . get_option( 'blog_charset' )
 			]);
@@ -92,17 +85,17 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 			$count = 1;
 			foreach ( $attachment_list as $attachment ) {
 
-				if ($this->expose_html) {
+				// if ($this->expose_html) {
 					$temp .= '<td><span class="lista-galeria__image"><span>Anexo ' . $count .  '</span><br>' . wp_get_attachment_image( $attachment->ID, 'tainacan-interface-item-attachments' ) . '</span></td>';
-				} else {
-					$file = get_attached_file($attachment->ID, true);
-					$info = image_get_intermediate_size($attachment->ID, 'tainacan-interface-item-attachments');
-					if ($info != false) {
-						$paths = realpath(str_replace(wp_basename($file), $info['file'], $file));
-						$wp_get_attachment_image = "<img src='$paths' class='attachment-tainacan-interface-item-attachments size-tainacan-interface-item-attachments' alt='' height='125' width='125'>";
-						$temp .= '<td><span class="lista-galeria__image"><span>Anexo ' . $count .  '</span><br>' . $wp_get_attachment_image . '</span></td>';
-					}
-				}
+				// } else {
+				// 	$file = get_attached_file($attachment->ID, true);
+				// 	$info = image_get_intermediate_size($attachment->ID, 'tainacan-interface-item-attachments');
+				// 	if ($info != false) {
+				// 		$paths = realpath(str_replace(wp_basename($file), $info['file'], $file));
+				// 		$wp_get_attachment_image = "<img src='$paths' class='attachment-tainacan-interface-item-attachments size-tainacan-interface-item-attachments' alt='' height='125' width='125'>";
+				// 		$temp .= '<td><span class="lista-galeria__image"><span>Anexo ' . $count .  '</span><br>' . $wp_get_attachment_image . '</span></td>';
+				// 	}
+				// }
 
 				if( $count % 3 == 0)  {
 					$attachements .= "<tr class='lista-galeria__row'>$temp</tr>";
@@ -148,25 +141,25 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 			if( !empty($item['_thumbnail_id']) || !empty($item['thumbnail']) ) {
 
 				$img_thumbnail = "";
-				if ($this->expose_html) {
+				// if ($this->expose_html) {
 					$img_thumbnail = get_the_post_thumbnail($item['id'], 'tainacan-medium-full');
-				} else {
-					$id_attachment = get_post_thumbnail_id( $item['id'] );
-					$file = get_attached_file($id_attachment, true);
-					$info = image_get_intermediate_size($id_attachment, 'tainacan-medium-full');
-					if ($info != false) {
-						$paths = realpath(str_replace(wp_basename($file), $info['file'], $file));
-						$img_thumbnail = "<img src='$paths' class='attachment-tainacan-medium-full size-tainacan-medium-full wp-post-image'>";
-					} else {
-						$paths = plugins_url('/statics/img/placeholder_square.jpg',__FILE__ );
-						$img_thumbnail = "<img src='$paths' class='attachment-tainacan-medium-full size-tainacan-medium-full wp-post-image' width='125' height='125'>";
-					}
-				}
+				// } else {
+				// 	$id_attachment = get_post_thumbnail_id( $item['id'] );
+				// 	$file = get_attached_file($id_attachment, true);
+				// 	$info = image_get_intermediate_size($id_attachment, 'tainacan-medium-full');
+				// 	if ($info != false) {
+				// 		$paths = realpath(str_replace(wp_basename($file), $info['file'], $file));
+				// 		$img_thumbnail = "<img src='$paths' class='attachment-tainacan-medium-full size-tainacan-medium-full wp-post-image'>";
+				// 	} else {
+				// 		$paths = plugins_url('/statics/img/placeholder_square.jpg',__FILE__ );
+				// 		$img_thumbnail = "<img src='$paths' class='attachment-tainacan-medium-full size-tainacan-medium-full wp-post-image' width='125' height='125'>";
+				// 	}
+				// }
 
 				$item_thumbnail = "<div class='lista-galeria__thumb'> $img_thumbnail </div>";
 			}
 
-			$pagebreak = $this->one_item_per_page ? ( $count++ == 0 ? '%s' : '<pagebreak type="NEXT-ODD"/> %s'):'<div class="border-bottom">%s</div>';
+			$pagebreak = $this->one_item_per_page ? ( $count++ == 0 ? '%s' : ''):'<div class="border-bottom">%s</div>';
 
 			$logo = get_option('tainacan_pdf_logo_url');
 			if (empty($logo)) {
@@ -221,7 +214,7 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 				</div>
 				";
 				
-			return $this->one_item_per_page ? $cover_page : $cover_page . '<pagebreak type="NEXT-ODD"/>';
+			return $this->one_item_per_page ? $cover_page : $cover_page;
 		}
 		return "";
 	}
@@ -248,6 +241,7 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 		return '
 			<title>PDF Tainacan</title>
 			<link rel="stylesheet" type="text/css" href="' . $main_css . '">
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js" integrity="sha512-HLbtvcctT6uyv5bExN/qekjQvFIl46bwjEq6PBvFogNfZ0YGVE+N3w6L+hGaJsGPWnMcAQ2qK8Itt43mGzGy8Q==" crossorigin="anonymous"></script>
 		';
 	}
 
