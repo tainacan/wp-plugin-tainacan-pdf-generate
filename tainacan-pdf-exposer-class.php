@@ -39,7 +39,7 @@ class Exposer extends \Tainacan\Exposers\Exposer
 						<head> %s </head>
 						<body>
 							<div class='box-principal'>
-								<h1 class='box-principal__instituicao'>Tainacan</h1>
+								 <h1 class='box-principal__instituicao'>Tainacan</h1>
 							<p>Este é um documento PDF gerado automaticamente.</p>
 							<a href='#' onclick='pdfMake.createPdf(\$settings.docDef).download();'> Abrir </a>
 						</div>
