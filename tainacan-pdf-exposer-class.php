@@ -8,6 +8,7 @@ class Exposer extends \Tainacan\Exposers\Exposer
 	public $mappers = false;
 	public $accept_no_mapper = true;
 	public $one_item_per_page = false;
+	public $images = array();
 
 	function __construct()
 	{
@@ -32,6 +33,7 @@ class Exposer extends \Tainacan\Exposers\Exposer
 			$settings = [
 				'docDef' => $this->get_doc_definition($response->get_data()['items'])
 			];
+			
 			$head = $this->get_head($settings);
 			$html = sprintf("
 				<!doctype html>
@@ -59,12 +61,11 @@ class Exposer extends \Tainacan\Exposers\Exposer
 		}
 	}
 
-	private function get_base64($url_img)
+	private function get_key_image($url_img)
 	{
-		$type = pathinfo($url_img, PATHINFO_EXTENSION);
-		$data = file_get_contents($url_img);
-		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-		return $base64;
+		$key = 'img-' . count($this->images);
+		$this->images[$key] = ($url_img);
+		return $key;
 	}
 
 	private function get_attachment($item)
@@ -100,7 +101,7 @@ class Exposer extends \Tainacan\Exposers\Exposer
 			foreach ($attachment_list as $attachment) {
 				$id = $count % 3;
 				$img = array(
-					'image' => $this->get_base64(wp_get_attachment_image_url($attachment->ID)),
+					'image' => $this->get_key_image(wp_get_attachment_image_url($attachment->ID)),
 					'width' => 100,
 					'margin' => [10, 10, 10, 10],
 					'alignment' => 'center'
@@ -114,13 +115,6 @@ class Exposer extends \Tainacan\Exposers\Exposer
 
 	protected function get_doc_definition($data)
 	{
-		$jsonld = '';
-		$items_list = [];
-		$count = 1;
-		if (get_option('tainacan_pdf_cover_page') == 'nao') {
-			$count = 0;
-		}
-
 		$docDef = array(
 			'pageSize' => 'A4',
 			'styles' => [
@@ -201,7 +195,7 @@ class Exposer extends \Tainacan\Exposers\Exposer
 						[
 							'maxWidth' => 50,
 							'maxHeight' => 50,
-							'image' => $this->get_base64($logo),
+							'image' => $this->get_key_image($logo),
 							'alignment' => 'right'
 						]
 					]
@@ -214,13 +208,14 @@ class Exposer extends \Tainacan\Exposers\Exposer
 				$img_thumbnail = get_the_post_thumbnail_url($item['id'], 'tainacan-medium-full');
 			}
 			$docDef['content']['stack'][] = [
-				'image' => $this->get_base64($img_thumbnail),
+				'image' => $this->get_key_image($img_thumbnail),
 				'maxWidth' => 300,
 				'alignment' => 'center',
 				'margin' => [20, 20, 20, 20]
 			];
 			$docDef['content']['stack'][] = $tableMetadata;
 		}
+		$docDef['images'] = $this->images;
 		return $docDef;
 	}
 
@@ -237,7 +232,7 @@ class Exposer extends \Tainacan\Exposers\Exposer
 				[
 					'maxWidth' => 400,
 					'alignment' => 'center',
-					'image' => $this->get_base64($logo),
+					'image' => $this->get_key_image($logo),
 					'margin' => [0, 200, 0, 20]
 				],
 				[
@@ -269,26 +264,5 @@ class Exposer extends \Tainacan\Exposers\Exposer
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.min.js" integrity="sha512-VIF8OqBWob/wmCvrcQs27IrQWwgr3g+iA4QQ4hH/YeuYBIoAUluiwr/NX5WQAQgUaVx39hs6l05cEOIGEB+dmA==" crossorigin="anonymous"></script>
 			<script src="' . $main_js . '" crossorigin="anonymous"></script>
 		';
-	}
-
-	private function create_footer()
-	{
-		$now_date = date('m/d/Y');
-		$logo_tainacan = plugins_url('/statics/img/lgo/tainacan.svg', __FILE__);
-		return "
-		<table class='rodape'>
-			<tr>
-				<td class='logo'>
-					<img class='tainacan-logo' src='$logo_tainacan' alt='Tainacan' />
-				</td>
-				<td class='paginacao col-center'>
-					{PAGENO}/{nbpg}
-				</td>
-				<td class='data col-right'>
-					$now_date
-				</td>
-			</tr>
-		</table>
-		";
 	}
 }
