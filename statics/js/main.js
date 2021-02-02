@@ -29,11 +29,13 @@ $settings.docDef['footer'] = function(currentPage, pageCount) {
 var progressCallbackMethod = function (progress) {
     document.getElementById("progress").innerHTML = (progress * 100).toFixed(2) + '%';
     if(progress == 1) {
-        document.getElementById("loadingio-spinner").style.display = "none";
+        //document.getElementById("loadingio-spinner").style.display = "none";
     }
 };
 
 function start() {
-    pdfMake.createPdf($settings.docDef).download('document-tainacan.pdf', null, {progressCallback: progressCallbackMethod});
+    pdfMake.createPdf($settings.docDef).open({progressCallback: progressCallbackMethod}, window);
+    // pdfMake.createPdf($settings.docDef).download('document-tainacan.pdf', null, {progressCallback: progressCallbackMethod});
+    
 }
 
