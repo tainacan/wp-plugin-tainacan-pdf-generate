@@ -68,7 +68,7 @@ class Exposer extends \Tainacan\Exposers\Exposer
 	{
 		if ($url_img == null || empty($url_img))
 			return 'empty';
-
+			return 'empty';
 		$key = 'img-' . count($this->images);
 		$this->images[$key] = ($url_img);
 		return $key;
@@ -142,6 +142,11 @@ class Exposer extends \Tainacan\Exposers\Exposer
 					'bold' => true,
 					'fontSize' => 13,
 					'color' => 'black'
+				],
+				'footer' => [
+					'bold' => false,
+					'fontSize' => 8,
+					'color' => '#a3a3a3'
 				]
 			],
 			'content' => [
@@ -162,7 +167,7 @@ class Exposer extends \Tainacan\Exposers\Exposer
 			foreach ($item['metadata'] as $metadata) {
 				$metaTitle = array(
 					"text"   => $metadata["name"],
-					"noWrap" => true
+					"noWrap" => false
 				);
 				$value = array(
 					"text" => empty($metadata["value_as_string"])
@@ -231,7 +236,7 @@ class Exposer extends \Tainacan\Exposers\Exposer
 		$name = get_option('tainacan_pdf_nome_instituicao');
 		$logo = get_option('tainacan_pdf_logo_url');
 		if (empty($logo)) {
-			$logo = ('./statics/img/lgo/thumbnail_placeholder.jpg');
+			$logo =  plugins_url('/statics/img/lgo/thumbnail_placeholder.jpg', __FILE__);
 		}
 		return array(
 			'pageBreak' => $this->one_item_per_page ? false : 'after',
