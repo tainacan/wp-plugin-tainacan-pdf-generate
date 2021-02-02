@@ -68,8 +68,8 @@ class Exposer extends \Tainacan\Exposers\Exposer
 	{
 		if ($url_img == null || empty($url_img))
 			return 'empty';
-			return 'empty';
-		$key = 'img-' . count($this->images);
+
+			$key = 'img-' . count($this->images);
 		$this->images[$key] = ($url_img);
 		return $key;
 	}
