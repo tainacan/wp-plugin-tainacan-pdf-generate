@@ -1,0 +1,168 @@
+var dd = {
+    pageSize: 'A4',
+    //pageMargins: [ 5, 5, 5, 5 ],
+    footer: function(currentPage, pageCount) { 
+        return {
+            columns: [
+                { text: currentPage.toString() + '/' + pageCount },
+                { text: currentPage.toString() + '/' + pageCount },
+                { text: currentPage.toString() + '/' + pageCount } 
+            ]
+        };
+    },
+    content: [
+        {
+                    stack: [
+                        {
+                			alignment: 'justify',
+                			columns: [
+                				{
+                				    stack:[
+                				        {text: 'Museu Histórico Nacional', style: 'header' },
+                                        {text: 'Coleção: Acervo Museológico', style: 'subheader'}
+                                    ]
+                				},
+                				{
+    				                width: 50,
+    				                height: 50,
+    				                image: 'sampleImage.jpg',
+    				                alignment: 'center'
+    			                }
+                			],
+                			margin: [ 0, 0, 0, 20 ],
+                		},
+                		{text: "Item A", style: 'subheader'},
+    			        {
+    				        image: 'sampleImage.jpg',
+    				        width: 300,
+    				        alignment: 'center',
+    				        margin: [ 0, 0, 0, 20 ]
+    			        },
+                        {
+    			            style: 'tableMetadata',
+    			            layout: 'lightHorizontalLines',
+    			            table: {
+    				            widths: ['auto', '*'],
+    				            body: [
+    				                [{text: 'Metadado', style: 'tableHeader'}, {text: 'valor', style: 'tableHeader'}],
+    					            [
+    					                {text: 'I am auto sized.', noWrap: true},
+    					                {text: '\
+    					                    This is a star-sized column. The next column over, \
+    					                    an auto-sized column, will not wrap to accomodate all the text in this cell, \
+    					                    because it has been given the noWrap style.'
+    					                    
+    					                }, 
+    					            ],
+    					            [
+    					                {text: 'I am auto sized.', noWrap: true},
+    					                'This is a star-sized column. The next column over, an auto-sized column, will not wrap to accomodate all the text in this cell, because it has been given the noWrap style.', 
+    					            ],
+    				            ]
+    			            }
+    		            },
+    		            //#NEW ITEM
+    		            {
+    		                pageBreak: 'before',
+                			alignment: 'justify',
+                			columns: [
+                				{
+                				    stack:[
+                				        {text: 'Museu Histórico Nacional', style: 'header' },
+                                        {text: 'Coleção: Acervo Museológico', style: 'subheader'}
+                                    ]
+                				},
+                				{
+    				                width: 50,
+    				                height: 50,
+    				                image: 'sampleImage.jpg',
+    				                alignment: 'center'
+    			                }
+                			],
+                			margin: [ 0, 0, 0, 20 ],
+                		},
+                		{text: "Item B", style: 'subheader'},
+    			        {
+    				        image: 'sampleImage.jpg',
+    				        width: 300,
+    				        alignment: 'center',
+    				        margin: [ 0, 0, 0, 20 ]
+    			        },
+                        {
+    			            style: 'tableMetadata',
+    			            layout: 'lightHorizontalLines',
+    			            table: {
+    				            widths: ['auto', '*'],
+    				            body: [
+    				                [{text: 'Metadado', style: 'tableHeader'}, {text: 'valor', style: 'tableHeader'}],
+    					            [
+    					                {text: 'I am auto sized.', noWrap: true},
+    					                'This is a star-sized column. The next column over, an auto-sized column, will not wrap to accomodate all the text in this cell, because it has been given the noWrap style.', 
+    					            ],
+    					            [
+    					                {text: 'I am auto sized.', noWrap: true},
+    					                'This is a star-sized column. The next column over, an auto-sized column, will not wrap to accomodate all the text in this cell, because it has been given the noWrap style.', 
+    					            ],
+    					            [
+    					                {text: 'Anexos.', noWrap: true},
+    					                {
+                    		                columns: [
+                		                        { stack: [
+                		                            {
+                            				            image: 'sampleImage.jpg',
+                            				            width: 100,
+                            				            alignment: 'center'
+                		                            },{
+                            				            image: 'sampleImage.jpg',
+                            				            width: 100,
+                            				            alignment: 'center'
+                            				        },
+                            				    ]},{ stack: [
+                            				        {
+                            				            image: 'sampleImage.jpg',
+                            				            width: 100,
+                            				            alignment: 'center'
+                            				            
+                            				        }
+                            				    ]},{ stack: [
+                            				        {
+                            				            image: 'sampleImage.jpg',
+                            				            width: 100,
+                            				            alignment: 'center'
+                            				        }
+                            				    ]}
+                    			          ]
+                                		
+                    		            }, 
+    					            ],
+    				            ]
+    			            }
+    		            },
+    		            
+                    ]
+               
+            
+        }
+    ],
+    styles: {
+		header: {
+			fontSize: 18,
+			bold: true
+		},
+		subheader: {
+			fontSize: 15,
+			bold: true
+		},
+		quote: {
+			italics: true
+		},
+		small: {
+			fontSize: 8
+		},
+		tableHeader: {
+			bold: true,
+			fontSize: 13,
+			color: 'black'
+		}
+	}
+}

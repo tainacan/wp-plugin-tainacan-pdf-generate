@@ -1,61 +1,57 @@
 <?php
+
 namespace TainacanPDFExposer;
 
-class Exposer extends \Tainacan\Exposers\Exposer {
+class Exposer extends \Tainacan\Exposers\Exposer
+{
 	public $slug = 'exposer-pdf';
 	public $mappers = false;
 	public $accept_no_mapper = true;
 	public $one_item_per_page = false;
-	public $expose_html = false;
 
-	function __construct() {
-		wp_enqueue_style( 'tainacan_pdf_main' );
-		$this->set_name( __('PDF') );
-		$this->set_description( __('Exposer items as PDF', 'pdf-exposer') );
-
-		$this->expose_html = get_option('tainacan_pdf_use_html') == 'html';
-
+	function __construct()
+	{
+		wp_enqueue_style('tainacan_pdf_main');
+		$this->set_name(__('PDF'));
+		$this->set_description(__('Exposer items as PDF', 'pdf-exposer'));
+		$this->pdf_cover_page = get_option('tainacan_pdf_cover_page') == 'sim';
 		if (get_option('tainacan_one_item_per_page') == 'sim')
 			$this->one_item_per_page = true;
 		else
 			$this->one_item_per_page = false;
 	}
 
-	protected $contexts = [];
-
 	/**
 	 * 
 	 * {@inheritDoc}
 	 * @see \Tainacan\Exposers\Types\Type::rest_request_after_callbacks()
 	 */
-	public function rest_request_after_callbacks( $response, $handler, $request ) {
-		
-		//require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
-
+	public function rest_request_after_callbacks($response, $handler, $request)
+	{
 		try {
-			$body = $this->array_to_html($response->get_data()['items']);
-			$head = $this->get_head();
-			$html = $this->get_html($head, $body);
-			
-			if ($this->expose_html) {
-				$response->set_headers([
-					'Content-Type: text/html; charset=' . get_option( 'blog_charset' )
-				]);
+			$settings = [
+				'docDef' => $this->get_doc_definition($response->get_data()['items'])
+			];
+			$head = $this->get_head($settings);
+			$html = sprintf("
+				<!doctype html>
+					<html>
+						<head> %s </head>
+						<body>
+							<div class='box-principal'>
+								<h1 class='box-principal__instituicao'>Tainacan</h1>
+							<p>Este é um documento PDF gerado automaticamente.</p>
+							<a href='#' onclick='pdfMake.createPdf(\$settings.docDef).download();'> Abrir </a>
+						</div>
+					</body>
+				</html>", $head);
 
-				$response->set_data($html);
-				return $response;
-			} else {
-				$response->set_headers([
-					'Content-Type: text/html; charset=' . get_option( 'blog_charset' )
-				]);
-
-				$response->set_data($html);
-				return $response;
-			}
-			
+			$response->set_headers(['Content-Type: text/html; charset=' . get_option('blog_charset')]);
+			$response->set_data(addslashes($html));
+			return $response;
 		} catch (\Exception $e) {
 			$response->set_headers([
-				'Content-Type: text/html; charset=' . get_option( 'blog_charset' )
+				'Content-Type: text/html; charset=' . get_option('blog_charset')
 			]);
 
 			$response->set_data("Falha ao gerar PDF");
@@ -63,9 +59,18 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 		}
 	}
 
-	private function get_attachment($item) {
-		if (get_option('tainacan_pdf_show_attachements') == 'nao') 
-			return "";
+	private function get_base64($url_img)
+	{
+		$type = pathinfo($url_img, PATHINFO_EXTENSION);
+		$data = file_get_contents($url_img);
+		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+		return $base64;
+	}
+
+	private function get_attachment($item)
+	{
+		if (get_option('tainacan_pdf_show_attachements') == 'nao')
+			return [];
 
 		$attachment_list = array_values(
 			get_children(
@@ -79,177 +84,197 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 			)
 		);
 
-		$attachements = "";
-		$temp = "";
-		if ( ! empty( $attachment_list ) ) {
-			$count = 1;
-			foreach ( $attachment_list as $attachment ) {
+		$attachements = array(
+			['text' => 'Anexos', 'noWrap' => true],
+			[
+				'columns' => [
+					['stack' => array()],
+					['stack' => array()],
+					['stack' => array()]
+				]
+			]
+		);
 
-				// if ($this->expose_html) {
-					$temp .= '<td><span class="lista-galeria__image"><span>Anexo ' . $count .  '</span><br>' . wp_get_attachment_image( $attachment->ID, 'tainacan-interface-item-attachments' ) . '</span></td>';
-				// } else {
-				// 	$file = get_attached_file($attachment->ID, true);
-				// 	$info = image_get_intermediate_size($attachment->ID, 'tainacan-interface-item-attachments');
-				// 	if ($info != false) {
-				// 		$paths = realpath(str_replace(wp_basename($file), $info['file'], $file));
-				// 		$wp_get_attachment_image = "<img src='$paths' class='attachment-tainacan-interface-item-attachments size-tainacan-interface-item-attachments' alt='' height='125' width='125'>";
-				// 		$temp .= '<td><span class="lista-galeria__image"><span>Anexo ' . $count .  '</span><br>' . $wp_get_attachment_image . '</span></td>';
-				// 	}
-				// }
-
-				if( $count % 3 == 0)  {
-					$attachements .= "<tr class='lista-galeria__row'>$temp</tr>";
-					$temp = "";
-				} elseif ( count($attachment_list) == $count ) {
-					$attachements .= "<tr class='lista-galeria__row'>$temp</tr>";
-					$temp = "";
-				}
+		if (!empty($attachment_list)) {
+			$count = 0;
+			foreach ($attachment_list as $attachment) {
+				$id = $count % 3;
+				$img = array(
+					'image' => $this->get_base64(wp_get_attachment_image_url($attachment->ID)),
+					'width' => 100,
+					'margin' => [10, 10, 10, 10],
+					'alignment' => 'center'
+				);
+				$attachements[1]['columns'][$id]['stack'][] = $img;
 				$count++;
 			}
 		}
-
-		$attachements = "
-			<div class='lista-galeria__images'>
-				<table class='lista-galeria__table'>
-					$attachements
-				</table>
-			</div>";
 		return $attachements;
 	}
 
-	protected function array_to_html( $data) {
+	protected function get_doc_definition($data)
+	{
 		$jsonld = '';
 		$items_list = [];
 		$count = 1;
-		if(get_option('tainacan_pdf_cover_page') == 'nao') {
+		if (get_option('tainacan_pdf_cover_page') == 'nao') {
 			$count = 0;
 		}
+
+		$docDef = array(
+			'pageSize' => 'A4',
+			'styles' => [
+				'header' => [
+					'fontSize' => 18,
+					'bold' => true
+				],
+				'subheader' => [
+					'fontSize' => 15,
+					'bold' => true
+				],
+				'quote' => [
+					'italics' => true
+				],
+				'small' => [
+					'fontSize' => 8
+				],
+				'tableHeader' => [
+					'bold' => true,
+					'fontSize' => 13,
+					'color' => 'black'
+				]
+			],
+			'content' => [
+				'stack' => []
+			]
+		);
+		if ($this->pdf_cover_page) {
+			$docDef['content']['stack'][] = $this->get_cover_page();
+		}
+
 		foreach ($data as $item) {
-			$temp = "";
-			$pattern_li = "<li><strong> %s:</strong><p> %s </p></li>";
-			$lis = "";
+			$metaBody = array(
+				[
+					['text' => 'Metadado', 'style' => 'tableHeader'],
+					['text' => 'Valor', 'style' => 'tableHeader']
+				]
+			);
 			foreach ($item['metadata'] as $metadata) {
-				$lis .= sprintf($pattern_li, $metadata["name"], empty($metadata["value_as_string"]) ? '<span>Valor não informado</span>' : $metadata["value_as_string"]);
+				$metaTitle = array(
+					"text"   => $metadata["name"],
+					"noWrap" => true
+				);
+				$value = array(
+					"text" => empty($metadata["value_as_string"])
+						? 'Valor não informado'
+						: $metadata["value_as_string"]
+				);
+				$metaBody[] = [$metaTitle, $value];
 			}
 
 			$attachements = $this->get_attachment($item);
+			if (!empty($attachements)) $metaBody[] = $attachements;
 
-			$item_title = isset($item['title']) ? $item['title'] : '';
+			$tableMetadata = array(
+				'style' => 'tableMetadata',
+				'layout' => 'lightHorizontalLines',
+				'table' => [
+					'widths' => ['auto', '*'],
+					'body' => $metaBody
+				]
+			);
+
+			$logo = get_option('tainacan_pdf_logo_url');
+			$name = get_option('tainacan_pdf_nome_instituicao');
 			$collection_name = \Tainacan\Repositories\Collections::get_instance()->fetch($item['collection_id'], 'OBJECT')->get_name();
+			$docDef['content']['stack'][] =
+				[
+					'pageBreak' => (!empty($docDef['content']['stack'])) && $this->one_item_per_page ? 'before' : false,
+					'alignment' => 'justify',
+					'columns' => [
+						[
+							'stack' => [
+								['text' => $name, 'style' => 'header'],
+								['text' => "Coleção: $collection_name", 'style' => 'subheader']
+							]
+						],
+						[
+							'maxWidth' => 50,
+							'maxHeight' => 50,
+							'image' => $this->get_base64($logo),
+							'alignment' => 'right'
+						]
+					]
 
-			$item_thumbnail = "";
-			if( !empty($item['_thumbnail_id']) || !empty($item['thumbnail']) ) {
+				];
 
-				$img_thumbnail = "";
-				// if ($this->expose_html) {
-					$img_thumbnail = get_the_post_thumbnail($item['id'], 'tainacan-medium-full');
-				// } else {
-				// 	$id_attachment = get_post_thumbnail_id( $item['id'] );
-				// 	$file = get_attached_file($id_attachment, true);
-				// 	$info = image_get_intermediate_size($id_attachment, 'tainacan-medium-full');
-				// 	if ($info != false) {
-				// 		$paths = realpath(str_replace(wp_basename($file), $info['file'], $file));
-				// 		$img_thumbnail = "<img src='$paths' class='attachment-tainacan-medium-full size-tainacan-medium-full wp-post-image'>";
-				// 	} else {
-				// 		$paths = plugins_url('/statics/img/placeholder_square.jpg',__FILE__ );
-				// 		$img_thumbnail = "<img src='$paths' class='attachment-tainacan-medium-full size-tainacan-medium-full wp-post-image' width='125' height='125'>";
-				// 	}
-				// }
+			$docDef['content']['stack'][] = ['text' => isset($item['title']) ? $item['title'] : '', 'style' => 'subheader'];
 
-				$item_thumbnail = "<div class='lista-galeria__thumb'> $img_thumbnail </div>";
+			if (!empty($item['_thumbnail_id']) || !empty($item['thumbnail'])) {
+				$img_thumbnail = get_the_post_thumbnail_url($item['id'], 'tainacan-medium-full');
 			}
-
-			$pagebreak = $this->one_item_per_page ? ( $count++ == 0 ? '%s' : ''):'<div class="border-bottom">%s</div>';
-
-			$logo = get_option('tainacan_pdf_logo_url');
-			if (empty($logo)) {
-				$logo = plugins_url('/statics/img/lgo/thumbnail_placeholder.jpg',__FILE__ );
-			}
-			$name = get_option('tainacan_pdf_nome_instituicao');
-			$items_list[] = sprintf($pagebreak, "
-					<table class='topo'>
-						<tr>
-							<td><h2 class='lista-galeria__instituicao'>$name</h2></td>
-							<td rowspan='2' class='logo-instituicao col-right'>
-								<img class='museu-logo' src='$logo' alt='Museu' />
-							</td>
-						</tr>
-						<tr>
-							<td><span class='lista-galeria__colecao'>Coleção: $collection_name</span></td>
-						</tr>
-					</table>
-					<div class='lista-galeria'>
-						<h3 class='lista-galeria__title'>$item_title</h3>
-						$item_thumbnail
-						<ul class='lista-galeria__dados'>
-							$lis
-						</ul>
-						$attachements
-					</div>
-				");
+			$docDef['content']['stack'][] = [
+				'image' => $this->get_base64($img_thumbnail),
+				'maxWidth' => 300,
+				'alignment' => 'center',
+				'margin' => [20, 20, 20, 20]
+			];
+			$docDef['content']['stack'][] = $tableMetadata;
 		}
-		return \implode(" ", $items_list);
+		return $docDef;
 	}
 
-	public function get_locale($obj) {
-			if(array_key_exists('ID', $obj) && function_exists('wpml_get_language_information')) {
-					$lang_envs = wpml_get_language_information($obj['ID']);
-					return $lang_envs['locale'];
-			}
-			return get_locale();
-	}
-
-	private function get_cover_page() {
-		if(get_option('tainacan_pdf_cover_page') == 'sim') {
-			$logo = get_option('tainacan_pdf_logo_url');
-			if (empty($logo)) {
-				$logo = plugins_url('/statics/img/lgo/thumbnail_placeholder.jpg',__FILE__ );
-			}
-			$name = get_option('tainacan_pdf_nome_instituicao');
-			$cover_page = "
-				<div class='box-principal'>
-					<img class='box-principal__logo' src='$logo' alt='Museu' />
-					<h1 class='box-principal__instituicao'>$name</h1>
-					<p>Este é um documento PDF gerado automaticamente.</p>
-				</div>
-				";
-				
-			return $this->one_item_per_page ? $cover_page : $cover_page;
+	private function get_cover_page()
+	{
+		$name = get_option('tainacan_pdf_nome_instituicao');
+		$logo = get_option('tainacan_pdf_logo_url');
+		if (empty($logo)) {
+			$logo = ('./statics/img/lgo/thumbnail_placeholder.jpg');
 		}
-		return "";
+		return array(
+			'pageBreak' => $this->one_item_per_page ? false : 'after',
+			'stack' => [
+				[
+					'maxWidth' => 400,
+					'alignment' => 'center',
+					'image' => $this->get_base64($logo),
+					'margin' => [0, 200, 0, 20]
+				],
+				[
+					'text' => $name,
+					'style' => 'subheader',
+					'alignment' => 'center'
+				], [
+					'text' => "Este é um documento PDF gerado automaticamente",
+					'style' => 'quote',
+					'alignment' => 'center'
+				]
+			]
+		);
 	}
 
-	private function get_html($head, $body) {
-		return sprintf("
-		<!doctype html>
-			<html>
-				<head>
-					%s
-					<link href='https://fonts.googleapis.com/css?family=Roboto&display=swap' rel='stylesheet'>
-				</head>
-				
-				<body>
-				  %s
-					%s
-				</body>
-			</html>
-		", $head, $this->get_cover_page(), $body);
-	}
-
-	private function get_head() {
-		$main_css = plugins_url('/statics/css/main.css',__FILE__ );
+	private function get_head($settings = [])
+	{
+		$settings = json_encode($settings);
+		$main_css = plugins_url('/statics/css/main.css', __FILE__);
+		$main_js = plugins_url('/statics/js/main.js', __FILE__);
 		return '
 			<title>PDF Tainacan</title>
 			<link rel="stylesheet" type="text/css" href="' . $main_css . '">
+			<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+			<script>
+			 var $settings = ' . $settings . '
+			</script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js" integrity="sha512-HLbtvcctT6uyv5bExN/qekjQvFIl46bwjEq6PBvFogNfZ0YGVE+N3w6L+hGaJsGPWnMcAQ2qK8Itt43mGzGy8Q==" crossorigin="anonymous"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.min.js" integrity="sha512-VIF8OqBWob/wmCvrcQs27IrQWwgr3g+iA4QQ4hH/YeuYBIoAUluiwr/NX5WQAQgUaVx39hs6l05cEOIGEB+dmA==" crossorigin="anonymous"></script>
+			<script src="' . $main_js . '" crossorigin="anonymous"></script>
 		';
 	}
 
-	private function create_head() {}
-
-	private function create_footer() {
+	private function create_footer()
+	{
 		$now_date = date('m/d/Y');
-		$logo_tainacan = plugins_url('/statics/img/lgo/tainacan.svg',__FILE__ );
+		$logo_tainacan = plugins_url('/statics/img/lgo/tainacan.svg', __FILE__);
 		return "
 		<table class='rodape'>
 			<tr>
@@ -265,6 +290,5 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 			</tr>
 		</table>
 		";
-		
 	}
 }
