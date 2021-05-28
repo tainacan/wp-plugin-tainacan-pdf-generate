@@ -33,9 +33,37 @@ var progressCallbackMethod = function (progress) {
     }
 };
 
+function resolveAfter2Seconds() {
+    return new Promise(resolve => {
+        setTimeout(() => {
+        pdfMake.createPdf($settings.docDef).open({progressCallback: progressCallbackMethod}, window);
+        resolve('resolved');
+        }, 2000);
+    });
+}
+
+async function asyncCall() {
+    console.log('calling');
+    const result = await resolveAfter2Seconds();
+    console.log(result);
+    // expected output: "resolved"
+}
+
 function start() {
-    pdfMake.createPdf($settings.docDef).open({progressCallback: progressCallbackMethod}, window);
+    asyncCall();
+//    pdfMake.createPdf($settings.docDef).open({progressCallback: progressCallbackMethod}, window);
     // pdfMake.createPdf($settings.docDef).download('document-tainacan.pdf', null, {progressCallback: progressCallbackMethod});
-    
+    // // if (!win) {
+    //     var win = window.open('', '_blank');
+    //     if (win === null) {
+    //         throw 'Open PDF in new window blocked by browser';
+    //     }
+    // // }
+    // pdfDocGenerator = pdfMake.createPdf($settings.docDef);
+    // pdfDocGenerator.getBlob(function (result) {
+    //     var urlCreator = window.URL || window.webkitURL;
+    //     var pdfUrl = urlCreator.createObjectURL(result);
+    //     win.location.href = pdfUrl;
+    // }, {progressCallback: progressCallbackMethod});
 }
 

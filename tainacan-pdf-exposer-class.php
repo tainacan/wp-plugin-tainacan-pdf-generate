@@ -42,7 +42,7 @@ class Exposer extends \Tainacan\Exposers\Exposer
 				<!doctype html>
 					<html>
 						<head> %s </head>
-						<body onload='start()'>
+						<body onload='//start()'>
 							<div class='box-principal'>
 								<div id='loadingio-spinner'>
 									<div class='loadingio-spinner-pulse-18nyv9zhw1c'>
@@ -59,7 +59,7 @@ class Exposer extends \Tainacan\Exposers\Exposer
 								</div>
 								 <h1 class='box-principal__instituicao'>Tainacan</h1>
 							<p>Este é um documento PDF gerado automaticamente.</p>
-							<a href='#' onclick='pdfMake.createPdf(\$settings.docDef).download();'> Abrir </a>
+							<a href='#' onclick='start(); //pdfMake.createPdf(\$settings.docDef).download();'> Abrir </a>
 						</div>
 					</body>
 				</html>", $head);
