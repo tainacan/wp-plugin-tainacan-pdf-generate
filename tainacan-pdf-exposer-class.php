@@ -229,7 +229,7 @@ class Exposer extends \Tainacan\Exposers\Exposer {
 	private function get_html($head, $body) {
 		return sprintf("
 		<!doctype html>
-			<html>
+			<html class='tainacan-pdf-exposer--document'>
 				<head>
 					%s
 					<link href='https://fonts.googleapis.com/css?family=Roboto&display=swap' rel='stylesheet'>
