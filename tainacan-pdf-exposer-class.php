@@ -37,7 +37,7 @@ class Exposer extends \Tainacan\Exposers\Exposer
 			$head = $this->get_head($settings);
 			$html = sprintf("
 				<!doctype html>
-					<html>
+					<html class='tainacan-pdf-exposer--document'>
 						<head> %s </head>
 						<body>
 							<div class='box-principal'>
